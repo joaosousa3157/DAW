@@ -76,9 +76,9 @@ router.delete('/:id', async (req, res) => {
     }
 
     try {
-        const deletedWine = await wineWorker.deleteWine(wineId);
+        const deletedCount = await wineWorker.deleteWine(wineId);
 
-        if (deletedWine) {
+        if (deletedCount > 0) {
             res.status(200).json({ message: `Wine with ID ${wineId} deleted successfully` });
         } else {
             res.status(404).json({ message: `Wine with ID ${wineId} not found` });
@@ -87,6 +87,7 @@ router.delete('/:id', async (req, res) => {
         handleError(res, error);
     }
 });
+
 
 
 
