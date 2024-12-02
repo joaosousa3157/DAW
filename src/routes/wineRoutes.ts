@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => { //erro
     const wineId = Number(req.params.id);
 
     if (!Number.isInteger(wineId)) {
