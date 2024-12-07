@@ -16,8 +16,16 @@ const handleError = (res: express.Response, error: unknown) => {
 router.get('/', async (req, res) => {
     try 
     {
-        const wines = await wineWorker.getAllWines();
-        res.status(200).json(wines);
+        if (Object.keys(req.query).length === 0) 
+        {
+            console.log('No query parameters were passed');
+        } 
+        else 
+        {
+            const wines = await wineWorker.filterWines(req.query);
+            res.status(200).json(wines);
+        }
+
     } 
     catch (error) 
     {
@@ -68,25 +76,21 @@ router.post('/', async (req, res) => {
     }
 });
 
-// router.delete('/:id', async (req, res) => {
-//     const wineId = Number(req.params.id);
+router.delete('/:id', async (req, res) => {
+    const wineId = Number(req.params.id);
 
-//     if (!Number.isInteger(wineId)) {
-//         return res.status(400).json({ error: "Invalid wine ID" });
-//     }
+    try {
+        const deletedCount = await wineWorker.deleteWine(wineId);
 
-//     try {
-//         const deletedCount = await wineWorker.deleteWine(wineId);
-
-//         if (deletedCount > 0) {
-//             res.status(200).json({ message: `Wine with ID ${wineId} deleted successfully` });
-//         } else {
-//             res.status(404).json({ message: `Wine with ID ${wineId} not found` });
-//         }
-//     } catch (error) {
-//         handleError(res, error);
-//     }
-// });
+        if (deletedCount > 0) {
+            res.status(200).json({ message: `Wine with ID ${wineId} deleted successfully` });
+        } else {
+            res.status(404).json({ message: `Wine with ID ${wineId} not found` });
+        }
+    } catch (error) {
+        handleError(res, error);
+    }
+});
 
 
 

@@ -70,8 +70,8 @@ export default class winedbWorker
 
                 err ? reject(err): resolve(idUpdated)
 
-            })
-        })
+            });
+        });
     }
 
     public deleteWine(id: number): Promise<number> 
@@ -81,7 +81,19 @@ export default class winedbWorker
             this.wineDB.remove({id:id}, (err: Error | null, idRemoved: number) =>{
                 
                 err ? reject(err) : resolve(idRemoved);
-            })
-        })
+            });
+        });
     }
+
+    public filterWines(filter: Partial<Wine>): Promise<Wine[]> {
+        return new Promise((resolve, reject) => {
+
+            this.wineDB.find(filter, (err: Error | null, wines: Wine[]) => {
+
+                err ? reject(err) : resolve(wines);
+            });
+        });
+    }
+
+
 }
