@@ -18,7 +18,8 @@ router.get('/', async (req, res) => {
     {
         if (Object.keys(req.query).length === 0) 
         {
-            console.log('No query parameters were passed');
+            const wines = await wineWorker.getAllWines();
+            res.status(200).json(wines);
         } 
         else 
         {
@@ -33,29 +34,29 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+// router.get('/:id', async (req, res) => {
 
-    const wineId = Number(req.params.id);
-    if (!Number.isInteger(wineId)) 
-    {
-        res.status(400).json({ error: "Invalid wine ID" });
-    }
+//     const wineId = Number(req.params.id);
+//     if (!Number.isInteger(wineId)) 
+//     {
+//         res.status(400).json({ error: "Invalid wine ID" });
+//     }
 
-    try 
-    {
-        const wine = await wineWorker.getWineById(wineId);
-        if (wine) {
-            res.status(200).json(wine);
-        } else {
-            res.status(404).json({ message: `Wine with ID ${wineId} not found` });
-        }
-    } 
-    catch (error) 
-    {
-        handleError(res, error);
-    }
+//     try 
+//     {
+//         const wine = await wineWorker.getWineById(wineId);
+//         if (wine) {
+//             res.status(200).json(wine);
+//         } else {
+//             res.status(404).json({ message: `Wine with ID ${wineId} not found` });
+//         }
+//     } 
+//     catch (error) 
+//     {
+//         handleError(res, error);
+//     }
 
-});
+// });
 
 router.post('/', async (req, res) => {
     const newWine = req.body;

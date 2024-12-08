@@ -1,6 +1,7 @@
 import Datastore from 'nedb';
 import path from 'path';
 
+
 export interface Wine 
 {
     id: number,
@@ -85,9 +86,15 @@ export default class winedbWorker
         });
     }
 
-    public filterWines(filter: Partial<Wine>): Promise<Wine[]> {
-        return new Promise((resolve, reject) => {
-
+    public filterWines(filter: Partial<Wine>): Promise<Wine[]> 
+    {
+        return new Promise((resolve, reject) => 
+        {
+            if (filter.id !== undefined) filter.id = parseInt(filter.id as any);
+            if (filter.price !== undefined) filter.price = parseFloat(filter.price as any);
+            if (filter.vol !== undefined) filter.vol = parseFloat(filter.vol as any);
+            if (filter.capacity !== undefined) filter.capacity = parseInt(filter.capacity as any);
+            
             this.wineDB.find(filter, (err: Error | null, wines: Wine[]) => {
 
                 err ? reject(err) : resolve(wines);
