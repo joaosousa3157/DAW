@@ -32,3 +32,18 @@ router.get('/', async (req, res) => {
         handleError(res, error)
     }
 });
+
+router.post('/', async (req, res) => {
+    
+    const newOrder = req.body;
+
+    try 
+    {
+        const createdOrder = await orderWorker.insertOrder(newOrder);
+        res.status(201).json(createdOrder);
+    } 
+    catch (error) 
+    {
+        handleError(res, error);
+    }
+});
