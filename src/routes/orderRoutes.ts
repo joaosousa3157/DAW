@@ -22,7 +22,9 @@ router.get('/', async (req, res) => {
         } 
         else 
         {
+            console.log(req.query)
             const wines = await orderWorker.filterOrders(req.query);
+
             res.status(200).json(wines);
         }
 
@@ -47,3 +49,5 @@ router.post('/', async (req, res) => {
         handleError(res, error);
     }
 });
+
+export default router
