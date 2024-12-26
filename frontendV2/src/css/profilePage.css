@@ -1,0 +1,139 @@
+/* General Styles */
+.user-profile-page {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #333;
+  }
+  
+  /* Header Section */
+  .profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .profile-header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .profile-header p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Profile Details Section */
+  .profile-details {
+    margin-bottom: 40px;
+  }
+  
+  .profile-details h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .update-button {
+    padding: 10px 20px;
+    background-color: #462b38;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .update-button:hover {
+    background-color: #5b3748;
+  }
+  
+  /* Order History Section */
+  .order-history {
+    margin-bottom: 40px;
+  }
+  
+  .order-history h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .order-history ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .order-history li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .view-all-orders {
+    display: inline-block;
+    margin-top: 10px;
+    color: #462b38;
+    text-decoration: none;
+  }
+  
+  .view-all-orders:hover {
+    text-decoration: underline;
+  }
+  
+  /* Account Settings Section */
+  .account-settings {
+    margin-bottom: 40px;
+  }
+  
+  .account-settings h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .logout-button,
+  .delete-account-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-button {
+    background-color: #462b38;
+    color: #fff;
+  }
+  
+  .logout-button:hover {
+    background-color: #5b3748;
+  }
+  
+  .delete-account-button {
+    background-color: #c0392b;
+    color: #fff;
+  }
+  
+  .delete-account-button:hover {
+    background-color: #e74c3c;
+  }
+  

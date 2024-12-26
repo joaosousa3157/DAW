@@ -1,0 +1,8 @@
+export { default as AboutPage } from './AboutPage';
+export { default as CheckoutPage } from './CheckoutPage';
+export { default as DealsPage } from './DealsPage';
+export { default as HomePage } from './HomePage';
+export { default as MiscPage } from './MiscPage';
+export { default as WinesPage } from './WinesPage';
+export { default as ProfilePage } from './ProfilePage';
+export { default as LoginPage} from './LoginPage'

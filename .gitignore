@@ -1,3 +1,9 @@
-node_modules/
-build/
-.vscode/
+backend/node_modules/
+
+frontendV2/node_modules
+
+backend/build/
+frontendV2/dist
+
+backend/.vscode/
+frontendV2/.vscode/
