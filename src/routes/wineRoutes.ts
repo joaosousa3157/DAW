@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
 
     if (!newWine.name || !newWine.type || !newWine.price) 
     {
-        res.status(400).json({ error: "Missing required wine fields" });
+        res.status(400).json({ error: `Missing required wine fields on wine ${newWine.id}` });
     }
 
     try 
