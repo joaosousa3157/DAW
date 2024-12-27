@@ -57,7 +57,6 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    console.log("test");
 
     if (!email || !password) {
         res.status(400).json({ error: 'Email and password are required.' });
