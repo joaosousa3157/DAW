@@ -1,5 +1,4 @@
-import Datastore from 'nedb';
-import path from 'path';
+import { orderDB } from '../dbInstances';
 
 export interface Order 
 {
@@ -11,20 +10,13 @@ export interface Order
 
 export default class orderdbWorker 
 {
-    private orderDB: Nedb;
-
-    constructor() {
-        this.orderDB = new Datastore({
-            filename: path.join(__dirname, "database", "order.db"),
-            autoload: true
-        });
-    }
+    private db = orderDB;
 
     public insertOrder(order: Order)
     {
         return new Promise((resolve, reject) => 
             {
-                this.orderDB.insert(order, (err: Error | null, newOrder: Order) => 
+                this.db.insert(order, (err: Error | null, newOrder: Order) => 
                 {
                     err ? reject(err) : resolve(newOrder);
                 });
@@ -33,7 +25,7 @@ export default class orderdbWorker
 
     public getAllOrders(): Promise<Order[]> {
         return new Promise((resolve, reject) => {
-            this.orderDB.find({}, (err: Error | null, orders: Order[]) => {
+            this.db.find({}, (err: Error | null, orders: Order[]) => {
                 err ? reject(err) : resolve(orders);
             });
         });
@@ -41,7 +33,7 @@ export default class orderdbWorker
 
     public getOrderById(id: string): Promise<Order | null> {
         return new Promise((resolve, reject) => {
-            this.orderDB.findOne({ _id: id }, (err: Error | null, order: Order | null) => {
+            this.db.findOne({ _id: id }, (err: Error | null, order: Order | null) => {
                 err ? reject(err) : resolve(order);
             });
         });
@@ -49,7 +41,7 @@ export default class orderdbWorker
 
     public deleteOrder(id: string): Promise<number> {
         return new Promise((resolve, reject) => {
-            this.orderDB.remove({ _id: id }, {}, (err: Error | null, numRemoved: number) => {
+            this.db.remove({ _id: id }, {}, (err: Error | null, numRemoved: number) => {
                 err ? reject(err) : resolve(numRemoved);
             });
         });
@@ -61,7 +53,7 @@ export default class orderdbWorker
                 filter.dateOfPurchase = new Date(filter.dateOfPurchase as any);
             } 
 
-            this.orderDB.find(filter, (err: Error | null, orders: Order[]) => {
+            this.db.find(filter, (err: Error | null, orders: Order[]) => {
                 err ? reject(err) : resolve(orders);
             });
         });

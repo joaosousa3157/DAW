@@ -1,5 +1,4 @@
-import Datastore from 'nedb';
-import path from 'path';
+import { wineDB } from '../dbInstances';
 
 
 export interface Wine 
@@ -16,24 +15,13 @@ export interface Wine
 
 export default class winedbWorker 
 {
-    private wineDB: Nedb;
+    private db = wineDB;
 
-    constructor()
-    {
-        this.wineDB = new Datastore({
-            filename: path.join(__dirname, "database", "wine.db"),
-            autoload: true
-        });
-    }
-
-    public insertWine(wine: Wine) : Promise<Wine>
-    {
-        return new Promise((resolve, reject)=>{
-
-            this.wineDB.insert(wine, (err: Error | null, newWine: Wine) =>{
-
-                err ? reject(err) : resolve(newWine);
-
+    public insertWine(wine: Wine): Promise<Wine> {
+        return new Promise((resolve, reject) => {
+            this.db.insert(wine, (err: Error | null, newWine: Wine) => {
+                if (err) reject(err);
+                else resolve(newWine);
             });
         });
     }
@@ -42,7 +30,7 @@ export default class winedbWorker
     {
         return new Promise((resolve, reject) =>{
 
-            this.wineDB.find({}, (err: Error | null, wines: Wine[]) =>{
+            this.db.find({}, (err: Error | null, wines: Wine[]) =>{
 
                 err ? reject(err) : resolve(wines);
 
@@ -55,7 +43,7 @@ export default class winedbWorker
     {
         return new Promise((resolve, reject) =>{
 
-            this.wineDB.findOne({ id: id }, (err: Error | null, wine: Wine | null) => {
+            this.db.findOne({ id: id }, (err: Error | null, wine: Wine | null) => {
 
                 err ? reject(err) : resolve(wine);
 
@@ -67,7 +55,7 @@ export default class winedbWorker
     {
         return new Promise((resolve, reject) =>{
 
-            this.wineDB.update({id:id}, updatedWine, {}, (err: Error | null, idUpdated: number)=>{
+            this.db.update({id:id}, updatedWine, {}, (err: Error | null, idUpdated: number)=>{
 
                 err ? reject(err): resolve(idUpdated)
 
@@ -79,7 +67,7 @@ export default class winedbWorker
     {
         return new Promise((resolve, reject) =>{
 
-            this.wineDB.remove({id:id}, (err: Error | null, idRemoved: number) =>{
+            this.db.remove({id:id}, (err: Error | null, idRemoved: number) =>{
                 
                 err ? reject(err) : resolve(idRemoved);
             });
@@ -95,7 +83,7 @@ export default class winedbWorker
             if (filter.vol !== undefined) filter.vol = parseFloat(filter.vol as any);
             if (filter.capacity !== undefined) filter.capacity = parseInt(filter.capacity as any);
             
-            this.wineDB.find(filter, (err: Error | null, wines: Wine[]) => {
+            this.db.find(filter, (err: Error | null, wines: Wine[]) => {
 
                 err ? reject(err) : resolve(wines);
             });

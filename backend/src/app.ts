@@ -4,6 +4,7 @@ import cors from 'cors';
 import wineRoutes from './routes/wineRoutes';
 import userRoutes from './routes/userRoutes'
 import orderRoutes from './routes/orderRoutes'
+import reviewRoutes from './routes/reviewRoutes';
 
 const app = express();  
 const PORT = 3000
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/wines', wineRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use(express.static(staticPath));
 
