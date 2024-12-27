@@ -1,16 +1,10 @@
 import express, { Router } from 'express';
 import orderDBWorker from '../models/orderModel';
 import nodemailer from 'nodemailer';
+import { wineDB } from '../dbInstances';
 
 const router: Router = express.Router();
 const orderWorker: orderDBWorker = new orderDBWorker();
-
-
-
-
-//IMPORTANTE: Não consegui por o email com o nome do vinho está
-//só a enviar o email todo istranho. Não sei porque não consigo usar
-//as outras classes aqui
 
 
 
@@ -56,20 +50,37 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendOrderConfirmationEmail = async (email: string, order: any) => {
-    const mailOptions = {
-        from: '@ualg.pt',//email da uni
-        to: email,
-        subject: 'Confirmação de Compra',
-        text: `Obrigado pela sua compra! Detalhes do pedido:\n\n${JSON.stringify(order, null, 2)}`,
-    };
-
     try {
+        const wineDetails = await Promise.all(order.wineIDs.map((wineID: string) => {
+            return new Promise((resolve, reject) => {
+                wineDB.findOne({ id: parseInt(wineID) }, (err: Error | null, wine: any) => {
+                    if (err) reject(err);
+                    else resolve(wine);
+                });
+            });
+        }));
+
+        const formattedWines = wineDetails
+            .filter((wine: any) => wine !== null)
+            .map((wine: any) => `- ${wine.name} (${wine.type})`)
+            .join('\n');
+
+        const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+
+        const mailOptions = {
+            from: '@ualg.pt', // email da uni
+            to: email,
+            subject: 'Confirmação de Compra',
+            text: `Obrigado pela sua compra!\n\nDetalhes do pedido:\n${formattedWines}\n\nHora da compra: ${now}\n\nAgradecemos pela preferência!`,
+        };
+
         await transporter.sendMail(mailOptions);
         console.log('E-mail de confirmação enviado com sucesso!');
     } catch (error) {
         console.error('Erro ao enviar e-mail:', error);
     }
 };
+
 
 router.post('/', async (req, res) => {
     
