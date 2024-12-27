@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
-import OrderDBWorker from '../models/orderModel';
+import orderDBWorker from '../models/orderModel';
 import nodemailer from 'nodemailer';
 
 const router: Router = express.Router();
-const orderWorker: OrderDBWorker = new OrderDBWorker();
+const orderWorker: orderDBWorker = new orderDBWorker();
 
 
 
@@ -52,7 +52,7 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: '@ualg.pt', // EMAIL DA UNI
         pass: '',       // SENHA
-    },
+    }
 });
 
 const sendOrderConfirmationEmail = async (email: string, order: any) => {
