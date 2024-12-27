@@ -6,7 +6,7 @@ export interface Order
     userID: string;
     wineIDs: string[];
     dateOfPurchase: Date; 
-
+    userEmail: string;
 }
 
 export default class orderdbWorker 

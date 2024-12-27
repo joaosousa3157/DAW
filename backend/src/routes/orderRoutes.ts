@@ -1,8 +1,10 @@
 import express, { Router } from 'express';
 import OrderDBWorker from '../models/orderModel';
+import nodemailer from 'nodemailer';
 
 const router: Router = express.Router();
 const orderWorker: OrderDBWorker = new OrderDBWorker();
+
 
 const handleError = (res: express.Response, error: unknown) => {
     if (error instanceof Error) {
@@ -35,6 +37,32 @@ router.get('/', async (req, res) => {
     }
 });
 
+const transporter = nodemailer.createTransport({
+    host: 'smtp.office365.com',
+    port: 587,                 
+    secure: false,           
+    auth: {
+        user: '@ualg.pt', // EMAIL DA UNI
+        pass: '',       // SENHA
+    },
+});
+
+const sendOrderConfirmationEmail = async (email: string, order: any) => {
+    const mailOptions = {
+        from: '@ualg.pt',//email da uni
+        to: email,
+        subject: 'Confirmação de Compra',
+        text: `Obrigado pela sua compra! Detalhes do pedido:\n\n${JSON.stringify(order, null, 2)}`,
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('E-mail de confirmação enviado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao enviar e-mail:', error);
+    }
+};
+
 router.post('/', async (req, res) => {
     
     const newOrder = req.body;
@@ -42,6 +70,12 @@ router.post('/', async (req, res) => {
     try 
     {
         const createdOrder = await orderWorker.insertOrder(newOrder);
+
+        const userEmail = newOrder.userEmail;
+        if (userEmail) {
+            sendOrderConfirmationEmail(userEmail, createdOrder);
+        }
+
         res.status(201).json(createdOrder);
     } 
     catch (error) 
