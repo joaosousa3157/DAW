@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/dealsPage.css";
-import WineCard from "../components/Winecard";
+import WineCard from "../components/WineCard";
 
 const DealsPage: React.FC = () => {
   // Dados fictícios para exibir os produtos em promoção

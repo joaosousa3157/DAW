@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/homePage.css";
-import WineCard from "../components/Winecard";
+import WineCard from "../components/WineCard";
 
 const HomePage: React.FC = () => {
     const sampleWines = [

@@ -1,27 +1,42 @@
 import React, { useState } from "react";
-import "../css/LoginPage.css"; // Add your CSS file for styling
+import "../css/loginPage.css"; // Add your CSS file for styling
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Simple validation
-    if (!email || !password) {
-      setErrorMessage("Please fill in both fields.");
-      return;
-    }
+  // Simple validation
+  if (!email || !password) {
+    setErrorMessage("Please fill in both fields.");
+    return;
+  }
 
-    // Mock login logic
-    if (email === "user@example.com" && password === "password123") {
+  try {
+    const response = await fetch("http://localhost:3000/api/users/login", { //trocar a porta para a do back end que está a dar erro pois usam os 2 a mesma porta
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
       alert("Login successful!");
       setErrorMessage("");
+      // Adicionar lógica para redirecionar ou armazenar dados do usuário
     } else {
-      setErrorMessage("Invalid email or password.");
+      setErrorMessage(data.error || "Login failed.");
     }
+  } catch (error) {
+    console.error("Error during login:", error);
+    setErrorMessage("An error occurred. Please try again.");
+  }
   };
 
   return (

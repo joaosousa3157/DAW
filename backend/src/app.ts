@@ -10,6 +10,10 @@ const app = express();
 const PORT = 3000
 const staticPath = path.join(__dirname, '/../../frontendV2/dist');
 
+app.use(cors({
+        origin: 'http://localhost:3000', // Permite requisições do front-end (porta 3000)
+    }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/wines', wineRoutes);

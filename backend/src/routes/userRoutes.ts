@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import userdbWorker from '../models/userModel'
+import { Request, Response } from 'express';
 
 const router : Router = express.Router();
 const userWorker: userdbWorker = new userdbWorker();
@@ -52,5 +53,29 @@ router.delete('/:id', async (req, res) => {
         handleError(res, error);
     }
 });
+
+
+router.post('/login', async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    console.log("test");
+
+    if (!email || !password) {
+        res.status(400).json({ error: 'Email and password are required.' });
+        return;
+    }
+
+    try {
+        const user = await userWorker.getUserByEmail(email);
+
+        if (user && user.password === password) {
+            res.status(200).json({ message: 'Login successful', user });
+        } else {
+            res.status(401).json({ error: 'Invalid email or password.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'An internal error occurred.' });
+    }
+});
+
 
 export default router
