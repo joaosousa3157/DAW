@@ -6,7 +6,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     // Simple validation
@@ -15,12 +15,28 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // Mock login logic
-    if (email === "user@example.com" && password === "password123") {
-      alert("Login successful!");
-      setErrorMessage("");
-    } else {
-      setErrorMessage("Invalid email or password.");
+    try {
+      // Realiza a requisição para o back-end
+      const response = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Login successful!");
+        setErrorMessage("");
+        // Adicione lógica adicional aqui (ex: redirecionamento ou armazenamento de token)
+      } else {
+        setErrorMessage(data.error || "Login failed.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      setErrorMessage("An error occurred. Please try again.");
     }
   };
 
