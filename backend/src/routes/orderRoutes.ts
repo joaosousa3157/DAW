@@ -6,6 +6,14 @@ const router: Router = express.Router();
 const orderWorker: OrderDBWorker = new OrderDBWorker();
 
 
+
+
+//IMPORTANTE: Não consegui por o email com o nome do vinho está
+//só a enviar o email todo istranho. Não sei porque não consigo usar
+//as outras classes aqui
+
+
+
 const handleError = (res: express.Response, error: unknown) => {
     if (error instanceof Error) {
         res.status(500).json({ error: error.message });
