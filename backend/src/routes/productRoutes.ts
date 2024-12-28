@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
-import winedbWorker from '../models/wineModel'
+import productsdbWorker from '../models/productModel'
 
 
 const router : Router = express.Router();
-const wineWorker: winedbWorker = new winedbWorker();
+const productsWorker: productsdbWorker = new productsdbWorker();
 
 const handleError = (res: express.Response, error: unknown) => {
     if (error instanceof Error) {
@@ -18,12 +18,12 @@ router.get('/', async (req, res) => {
     {
         if (Object.keys(req.query).length === 0) 
         {
-            const wines = await wineWorker.getAllWines();
+            const wines = await productsWorker.getAllproducts();
             res.status(200).json(wines);
         } 
         else 
         {
-            const wines = await wineWorker.filterWines(req.query);
+            const wines = await productsWorker.filterProducts(req.query);
             res.status(200).json(wines);
         }
 
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
 
     try 
     {
-        const createdWine = await wineWorker.insertWine(newWine);
+        const createdWine = await productsWorker.insertProduct(newWine);
         res.status(201).json(createdWine);
     } 
     catch (error) 
@@ -57,7 +57,7 @@ router.delete('/:id', async (req, res) => {
     const wineId = Number(req.params.id);
 
     try {
-        const deletedCount = await wineWorker.deleteWine(wineId);
+        const deletedCount = await productsWorker.deleteProduct(wineId);
 
         if (deletedCount > 0) {
             res.status(200).json({ message: `Wine with ID ${wineId} deleted successfully` });

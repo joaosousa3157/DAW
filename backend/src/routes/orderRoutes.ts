@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import orderDBWorker from '../models/orderModel';
 import nodemailer from 'nodemailer';
-import { wineDB } from '../dbInstances';
+import { productDB } from '../dbInstances';
 
 const router: Router = express.Router();
 const orderWorker: orderDBWorker = new orderDBWorker();
@@ -53,7 +53,7 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
     try {
         const wineDetails = await Promise.all(order.wineIDs.map((wineID: string) => {
             return new Promise((resolve, reject) => {
-                wineDB.findOne({ id: parseInt(wineID) }, (err: Error | null, wine: any) => {
+                productDB.findOne({ id: parseInt(wineID) }, (err: Error | null, wine: any) => {
                     if (err) reject(err);
                     else resolve(wine);
                 });
