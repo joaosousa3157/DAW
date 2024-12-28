@@ -66,6 +66,15 @@ router.post('/login', async (req: Request, res: Response) => {
     try {
         const user = await userWorker.getUserByEmail(email);
 
+        if (password === "__check_only__") {
+            if (user) {
+                res.status(200).json({ exists: true });
+            } else {
+                res.status(404).json({ exists: false });
+            }
+            return;
+        }
+
         if (user && user.password === password) {
             res.status(200).json({ message: 'Login successful', user });
         } else {
@@ -75,6 +84,7 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'An internal error occurred.' });
     }
 });
+
 
 
 export default router

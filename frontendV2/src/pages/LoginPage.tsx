@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/loginPage.css"; // Add your CSS file for styling
+import "../css/loginPage.css"; // CSS para estilização
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -9,33 +9,52 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Simple validation
+    // Validação básica
     if (!email || !password) {
       setErrorMessage("Please fill in both fields.");
       return;
     }
 
     try {
-      // Realiza a requisição para o back-end
-      const response = await fetch("/api/users/login", {
+      // Verifica se o email já existe no banco de dados
+      const emailCheckResponse = await fetch("/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password: "__check_only__" }),
       });
 
-      const data = await response.json();
+      const emailCheckData = await emailCheckResponse.json();
 
-      if (response.ok) {
-        alert("Login successful!");
-        setErrorMessage("");
-        // Adicione lógica adicional aqui (ex: redirecionamento ou armazenamento de token)
+      if (!emailCheckResponse.ok) {
+        setErrorMessage(emailCheckData.error || "An error occurred.");
+        return;
+      }
+
+      if (emailCheckData.error === "Invalid email or password.") {
+        // Email não registrado, prosseguir com o registro
+        const registerResponse = await fetch("/api/users/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const registerData = await registerResponse.json();
+
+        if (registerResponse.ok) {
+          alert("Account created successfully!");
+          setErrorMessage("");
+        } else {
+          setErrorMessage(registerData.error || "Account creation failed.");
+        }
       } else {
-        setErrorMessage(data.error || "Login failed.");
+        setErrorMessage("This email is already registered. Please log in.");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during registration:", error);
       setErrorMessage("An error occurred. Please try again.");
     }
   };
@@ -66,7 +85,7 @@ const LoginPage: React.FC = () => {
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <button type="submit" className="login-button">
-          Login
+          Register
         </button>
       </form>
     </div>
