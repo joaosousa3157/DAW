@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
-import cors from 'cors';
-import wineRoutes from './routes/wineRoutes';
+import productRoutes from './routes/productRoutes';
 import userRoutes from './routes/userRoutes'
 import orderRoutes from './routes/orderRoutes'
 import reviewRoutes from './routes/reviewRoutes';
@@ -12,7 +11,7 @@ const staticPath = path.join(__dirname, '/../../frontendV2/dist');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/wines', wineRoutes);
+app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
