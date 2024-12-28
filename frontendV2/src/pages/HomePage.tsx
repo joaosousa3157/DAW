@@ -1,49 +1,62 @@
 import React from "react";
+import { useUser } from "../context/UserContext"; // Importa o contexto do usuário
 import "../css/homePage.css";
 import WineCard from "../components/WineCard";
 
 const HomePage: React.FC = () => {
-    const sampleWines = [
-        {
-          id: 1,
-          image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
-          name: "Château Margaux",
-          price: 200,
-          rating: 4.5,
-          category: "Red Wine",
-          region: "France",
-        },
-        {
-          id: 2,
-          image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
-          name: "Screaming Eagle",
-          price: 850,
-          rating: 5,
-          category: "White Wine",
-          region: "USA",
-        },
-        {
-          id: 3,
-          image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
-          name: "Riesling Delight",
-          price: 120,
-          rating: 4.0,
-          category: "White Wine",
-          region: "Germany",
-        },
-        {
-          id: 4,
-          image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
-          name: "Barolo King",
-          price: 300,
-          rating: 4.8,
-          category: "Red Wine",
-          region: "Italy",
-        },
-      ];
+  const { user, logout } = useUser(); // Obtém o usuário logado e a função de logout
+
+  const sampleWines = [
+    {
+      id: 1,
+      image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
+      name: "Château Margaux",
+      price: 200,
+      rating: 4.5,
+      category: "Red Wine",
+      region: "France",
+    },
+    {
+      id: 2,
+      image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
+      name: "Screaming Eagle",
+      price: 850,
+      rating: 5,
+      category: "White Wine",
+      region: "USA",
+    },
+    {
+      id: 3,
+      image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
+      name: "Riesling Delight",
+      price: 120,
+      rating: 4.0,
+      category: "White Wine",
+      region: "Germany",
+    },
+    {
+      id: 4,
+      image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
+      name: "Barolo King",
+      price: 300,
+      rating: 4.8,
+      category: "Red Wine",
+      region: "Italy",
+    },
+  ];
 
   return (
     <div className="home-page">
+      {/* Mensagem de boas-vindas personalizada */}
+      {user ? (
+        <div className="welcome-message">
+          <p>Olá, <strong>{user.email}</strong>! Bem-vindo de volta.</p>
+          <button onClick={logout} className="logout-button">Sair</button>
+        </div>
+      ) : (
+        <p>Por favor, faça login para aproveitar todas as funcionalidades.</p>
+      )}
+
       {/* Hero Section */}
       <section className="hero-section">
         <h1>Bem-vindo à Otis Wines</h1>

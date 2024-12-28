@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import para redirecionar
+import { useUser } from "../context/UserContext";
 import "../css/loginPage.css"; // Add your CSS file for styling
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { login } = useUser(); // Acessa o contexto do usuário
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -28,7 +32,8 @@ const LoginPage: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Login successful!");
+        login({ email }); // Atualiza o contexto com o usuário logado
+        navigate("/"); // Redireciona para a página Home
         setErrorMessage("");
         // Adicione lógica adicional aqui (ex: redirecionamento ou armazenamento de token)
       } else {

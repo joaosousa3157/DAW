@@ -3,13 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {AboutPage, CheckoutPage, DealsPage ,HomePage, MiscPage, WinesPage, ProfilePage, LoginPage} from './pages/index';
 
 import NavBar from './components/NavBar';
-import Footer from './components/Footer'
+import Footer from './components/Footer';
+import { UserProvider } from './context/UserContext';
 
 import "./css/global.css"
 
 const App: React.FC = () => {
   return (
-    <Router>
+    <UserProvider>
+      <Router>
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -22,7 +24,8 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
         </Routes>
         <Footer />
-    </Router>
+      </Router>
+    </UserProvider>
   );
 };
 

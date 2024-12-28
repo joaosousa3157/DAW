@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useUser } from "../context/UserContext"; // Importa o contexto do usuário
 import "../css/profilePage.css";
 
 interface Order {
@@ -7,15 +8,29 @@ interface Order {
 }
 
 const ProfilePage: React.FC = () => {
+  const { user, logout } = useUser(); // Obtém o usuário logado e a função de logout
   const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulating fetching data from a JSON file
-    fetch("/api/orders")
+    if (!user) return; // Se não houver usuário, não tenta carregar os pedidos
+
+    // Busca os pedidos do usuário logado
+    fetch(`/api/orders?userID=${user.email}`) // Filtra os pedidos pelo email do usuário
       .then((response) => response.json())
-      .then((data) => setOrders(data))
-      .catch((error) => console.error("Erro ao carregar pedidos:", error));
-  }, []);
+      .then((data) => {
+        setOrders(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar pedidos:", error);
+        setIsLoading(false);
+      });
+  }, [user]);
+
+  if (!user) {
+    return <p>Você precisa fazer login para acessar esta página.</p>;
+  }
 
   return (
     <div className="user-profile-page">
@@ -29,39 +44,56 @@ const ProfilePage: React.FC = () => {
         <form>
           <div className="form-group">
             <label htmlFor="name">Nome:</label>
-            <input type="text" id="name" name="name" placeholder="João Silva" />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="João Silva"
+              defaultValue={user.email.split("@")[0]} // Exemplo de nome derivado do email
+            />
           </div>
           <div className="form-group">
             <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="joao.silva@email.com" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="joao.silva@email.com"
+              value={user.email} // Exibe o email do usuário logado
+              readOnly
+            />
           </div>
-          <div className="form-group">
-            <label htmlFor="phone">Telefone:</label>
-            <input type="tel" id="phone" name="phone" placeholder="+55 11 91234-5678" />
-          </div>
-          <button type="submit" className="update-button">Atualizar Informações</button>
+          <button type="submit" className="update-button">
+            Atualizar Informações
+          </button>
         </form>
       </section>
 
       <section className="order-history">
         <h2>Histórico de Pedidos</h2>
-        {orders.length > 0 ? (
+        {isLoading ? (
+          <p>Carregando pedidos...</p>
+        ) : orders.length > 0 ? (
           <ul>
             {orders.map((order) => (
               <li key={order._id}>
-                <span>Pedido #{order._id}</span> - {order.dateOfPurchase} - <strong>0</strong>
+                <span>Pedido #{order._id}</span> - {order.dateOfPurchase}
               </li>
             ))}
           </ul>
         ) : (
-          <p>Carregando pedidos...</p>
+          <p>Nenhum pedido encontrado.</p>
         )}
       </section>
 
       <section className="account-settings">
         <h2>Configurações da Conta</h2>
-        <button className="logout-button">Sair da Conta</button>
-        <button className="delete-account-button">Excluir Conta</button>
+        <button onClick={logout} className="logout-button">
+          Sair da Conta
+        </button>
+        <button className="delete-account-button">
+          Excluir Conta
+        </button>
       </section>
     </div>
   );
