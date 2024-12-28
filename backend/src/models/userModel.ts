@@ -51,5 +51,15 @@ export default class userdbWorker {
                 err ? reject(err) : resolve(numRemoved);
             });
         });
-    }    
+    }   
+    
+    public getUserByEmail(email: string): Promise<User | null> {
+        return new Promise((resolve, reject) => {
+            this.db.findOne({ email }, (err: Error | null, user: User | null) => {
+                if (err) reject(err);
+                else resolve(user);
+            });
+        });
+    }
+    
 }

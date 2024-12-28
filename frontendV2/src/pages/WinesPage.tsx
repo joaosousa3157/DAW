@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import WineCard from "../components/Winecard";
+import WineCard from "../components/WineCard";
 import "../css/winesPage.css";
 
 const handleAddToCart = (wine) => {
