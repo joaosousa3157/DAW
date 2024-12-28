@@ -13,7 +13,7 @@ const WinesPage: React.FC = () => {
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/wines");
+        const response = await axios.get("http://localhost:3000/api/products?category=wine");
         setWinesData(response.data);
       } catch (error) {
         console.error("Error fetching wines data:", error);

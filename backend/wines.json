@@ -138,5 +138,19 @@
         "image": "https://via.placeholder.com/300",
         "rating": 3.8,
         "category": "wine"
+    },
+    {
+        "id": 11,
+        "name": "Saca Rolhas",
+        "type": "",
+        "region": "",
+        "price": 5.99,
+        "year": 2021,
+        "description": ".",
+        "vol": 0,
+        "capacity": 0,
+        "image": "https://via.placeholder.com/300",
+        "rating": 4,
+        "category": "acessory"
     }
 ]
