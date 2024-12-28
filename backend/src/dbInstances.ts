@@ -16,7 +16,7 @@ export const userDB = new Datastore({
     autoload: true,
 });
 
-export const wineDB = new Datastore({
-    filename: path.join(__dirname, 'models', 'database', 'wine.db'),
+export const productDB = new Datastore({
+    filename: path.join(__dirname, 'models', 'database', 'products.db'),
     autoload: true,
 });

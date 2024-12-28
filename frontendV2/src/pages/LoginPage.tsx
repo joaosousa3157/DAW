@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/LoginPage.css"; // Add your CSS file for styling
+import "../css/loginPage.css"; // Add your CSS file for styling
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");

@@ -1,36 +1,40 @@
-import { wineDB } from '../dbInstances';
+import { productDB } from '../dbInstances';
 
 
-export interface Wine 
+export interface Product 
 {
     id: number,
     name: string,
     type: string,
-    price: number
+    region : string,
+    price: number,
+    year: number,
     description: string,
     vol: number,
     capacity: number,
-    image: string
+    image: string,
+    category: string;
+    rating: number,
 }
 
-export default class winedbWorker 
+export default class productsdbWorker 
 {
-    private db = wineDB;
+    private db = productDB;
 
-    public insertWine(wine: Wine): Promise<Wine> {
+    public insertProduct(product: Product): Promise<Product> {
         return new Promise((resolve, reject) => {
-            this.db.insert(wine, (err: Error | null, newWine: Wine) => {
+            this.db.insert(product, (err: Error | null, newProduct: Product) => {
                 if (err) reject(err);
-                else resolve(newWine);
+                else resolve(newProduct);
             });
         });
     }
 
-    public getAllWines() : Promise<Wine[]> 
+    public getAllproducts() : Promise<Product[]> 
     {
         return new Promise((resolve, reject) =>{
 
-            this.db.find({}, (err: Error | null, wines: Wine[]) =>{
+            this.db.find({}, (err: Error | null, wines: Product[]) =>{
 
                 err ? reject(err) : resolve(wines);
 
@@ -39,23 +43,23 @@ export default class winedbWorker
 
     }
 
-    public getWineById(id: number): Promise<Wine | null>
+    public getProductById(id: number): Promise<Product | null>
     {
         return new Promise((resolve, reject) =>{
 
-            this.db.findOne({ id: id }, (err: Error | null, wine: Wine | null) => {
+            this.db.findOne({ id: id }, (err: Error | null, product: Product | null) => {
 
-                err ? reject(err) : resolve(wine);
+                err ? reject(err) : resolve(product);
 
             });
         });
     }
 
-    public updateWine(id: number, updatedWine: Wine): Promise<number>
+    public updateProduct(id: number, updatedProduct: Product): Promise<number>
     {
         return new Promise((resolve, reject) =>{
 
-            this.db.update({id:id}, updatedWine, {}, (err: Error | null, idUpdated: number)=>{
+            this.db.update({id:id}, updatedProduct, {}, (err: Error | null, idUpdated: number)=>{
 
                 err ? reject(err): resolve(idUpdated)
 
@@ -63,7 +67,7 @@ export default class winedbWorker
         });
     }
 
-    public deleteWine(id: number): Promise<number> 
+    public deleteProduct(id: number): Promise<number> 
     {
         return new Promise((resolve, reject) =>{
 
@@ -74,7 +78,7 @@ export default class winedbWorker
         });
     }
 
-    public filterWines(filter: Partial<Wine>): Promise<Wine[]> 
+    public filterProducts(filter: Partial<Product>): Promise<Product[]> 
     {
         return new Promise((resolve, reject) => 
         {
@@ -83,7 +87,7 @@ export default class winedbWorker
             if (filter.vol !== undefined) filter.vol = parseFloat(filter.vol as any);
             if (filter.capacity !== undefined) filter.capacity = parseInt(filter.capacity as any);
             
-            this.db.find(filter, (err: Error | null, wines: Wine[]) => {
+            this.db.find(filter, (err: Error | null, wines: Product[]) => {
 
                 err ? reject(err) : resolve(wines);
             });
