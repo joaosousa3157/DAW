@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface CheckoutItem {
   id: string;
@@ -11,6 +11,8 @@ interface CheckoutItem {
 interface CheckoutContextProps {
   checkoutItems: CheckoutItem[];
   addToCheckout: (item: CheckoutItem) => void;
+  removeFromCheckout: (id: string) => void;
+  updateQuantity: (id: string, amount: number) => void;
 }
 
 const CheckoutContext = createContext<CheckoutContextProps | undefined>(undefined);
@@ -18,7 +20,14 @@ const CheckoutContext = createContext<CheckoutContextProps | undefined>(undefine
 export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [checkoutItems, setCheckoutItems] = useState<CheckoutItem[]>([]);
+    const [checkoutItems, setCheckoutItems] = useState<CheckoutItem[]>(() => {
+        const storedItems = localStorage.getItem("checkoutItems");
+        return storedItems ? JSON.parse(storedItems) : [];
+      });
+    
+      useEffect(() => {
+        localStorage.setItem("checkoutItems", JSON.stringify(checkoutItems));
+      }, [checkoutItems]);;
 
   const addToCheckout = (item: CheckoutItem) => {
     setCheckoutItems((prevItems) => {
@@ -36,8 +45,24 @@ export const CheckoutProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  const removeFromCheckout = (id: string) => {
+    setCheckoutItems((prevItems) =>
+      prevItems.filter((item) => item.id !== id)
+    );
+  };
+
+  const updateQuantity = (id: string, amount: number) => {
+    setCheckoutItems((prevItems) => {
+      return prevItems.map((item) =>
+        item.id === id
+          ? { ...item, quantity: Math.max(item.quantity + amount, 1) } // Impede que a quantidade seja menor que 1
+          : item
+      );
+    });
+  };
+
   return (
-    <CheckoutContext.Provider value={{ checkoutItems, addToCheckout }}>
+    <CheckoutContext.Provider value={{ checkoutItems, addToCheckout, removeFromCheckout, updateQuantity }}>
       {children}
     </CheckoutContext.Provider>
   );
