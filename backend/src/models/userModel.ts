@@ -18,8 +18,7 @@ export default class userdbWorker {
             throw new Error("Email already registered.");
         }
     
-        // Insira o novo usuário no banco de dados
-        const result = await this.db.insert(newUser); // exemplo de método genérico
+        const result = await this.db.insert(newUser); 
         return result;
     }
     
