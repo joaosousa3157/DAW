@@ -1,117 +1,51 @@
-/* Checkout Page */
 .checkout-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
-  }
-  
-  .checkout-container {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    width: 100%;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .cart-summary,
-  .checkout-form {
     padding: 20px;
-    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
   }
   
-  .cart-summary {
-    border-right: 1px solid #ddd;
-    min-width: 300px;
-    max-height: 300px; /* Limit height for scrollbar */
-    overflow-y: auto; /* Enable vertical scrollbar */
-  }
-  
-  .cart-summary h2 {
+  .cart-items {
+    border: 1px solid #ddd;
+    padding: 10px;
     margin-bottom: 20px;
+    border-radius: 5px;
   }
   
   .cart-item {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
-    font-size: 0.9rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
   }
   
-  .cart-total {
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  
+  .cart-item-details {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    margin-top: 10px;
-    font-size: 1.1rem;
-    background-color: #fff; /* Optional: Highlight the total row */
-    position: sticky; /* Keep total visible at the bottom */
-    bottom: 0;
-    padding: 10px 0;
-    border-top: 1px solid #ddd;
   }
   
-  .checkout-form {
-    min-width: 300px;
+  .cart-summary {
+    text-align: right;
+    margin-top: 20px;
   }
   
-  .checkout-form h2 {
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-row {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 8px;
-    font-size: 0.9rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .checkout-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    background-color: #b71c1c;
+  .checkout-button {
+    background-color: #28a745;
     color: white;
+    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
   }
   
-  .checkout-btn:hover {
-    background-color: #8e1414;
-  }
-  
-  /* Scrollbar Styling (Optional) */
-  .cart-summary::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .cart-summary::-webkit-scrollbar-thumb {
-    background-color: #b71c1c;
-    border-radius: 4px;
-  }
-  
-  .cart-summary::-webkit-scrollbar-track {
-    background-color: #f0f0f0;
+  .checkout-button:hover {
+    background-color: #218838;
   }
   

@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useCheckout } from "../context/CheckoutContext";
 import "../css/wineCard.css";
 
 interface WineCardProps {
-  id: number;
+  id: string;
   image: string;
   name: string;
   price: number;
   rating: number;
-  onAddToCart: () => void;
 }
 
 const WineCard: React.FC<WineCardProps> = ({
@@ -17,20 +17,35 @@ const WineCard: React.FC<WineCardProps> = ({
   name,
   price,
   rating,
-  onAddToCart,
 }) => {
+  const { addToCheckout } = useCheckout();
+
+  const handleAddToCart = () => {
+    addToCheckout({
+      id,
+      name,
+      price,
+      quantity: 1,
+      img: image,
+    });
+  };
+
   return (
     <div className="wine-card">
       <div className="wine-image-container">
-        <Link to={'/wines/' + id}><img src={image} alt={name} className="wine-image" /></Link>
+        <Link to={"/wines/" + id}>
+          <img src={image} alt={name} className="wine-image" />
+        </Link>
       </div>
       <div className="wine-info">
-        <Link to={'/wines/' + id}><h3 className="wine-name">{name}</h3></Link>
-        <p className="wine-price">{price.toString() + ' €'}</p>
+        <Link to={"/wines/" + id}>
+          <h3 className="wine-name">{name}</h3>
+        </Link>
+        <p className="wine-price">{price.toString() + " €"}</p>
         <div className="wine-rating">
           {"★".repeat(Math.floor(rating)) + (rating % 1 !== 0 ? "½" : "")}
         </div>
-        <button className="add-to-cart-button" onClick={onAddToCart}>
+        <button className="add-to-cart-button" onClick={handleAddToCart}>
           Adicionar ao carrinho
         </button>
       </div>

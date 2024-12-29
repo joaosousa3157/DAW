@@ -5,21 +5,21 @@ import WineCard from "../components/WineCard";
 const MiscPage: React.FC = () => {
   const accessories = [
     {
-        id: 1,
+      id: "1",
       image: "path/to/corkscrew.jpg",
       name: "Saca-rolhas Premium",
       price: 15,
       rating: 4.7,
     },
     {
-        id: 2,
+      id: "2",
       image: "path/to/wineGlass.jpg",
       name: "Conjunto de Taças de Vinho",
       price: 40,
       rating: 4.9,
     },
     {
-        id: 3,
+      id: "3",
       image: "path/to/wineCooler.jpg",
       name: "Resfriador de Vinho",
       price: 25,
@@ -31,7 +31,10 @@ const MiscPage: React.FC = () => {
     <div className="accessories-page">
       <header className="accessories-header">
         <h1>Acessórios para Vinhos</h1>
-        <p>Explore nossa seleção de acessórios que tornam sua experiência com vinho ainda melhor.</p>
+        <p>
+          Explore nossa seleção de acessórios que tornam sua experiência com
+          vinho ainda melhor.
+        </p>
       </header>
 
       <section className="accessories-list">
@@ -44,7 +47,6 @@ const MiscPage: React.FC = () => {
               name={accessory.name}
               price={accessory.price}
               rating={accessory.rating}
-              onAddToCart={() => alert(`Adicionado ao carrinho: ${accessory.name}`)}
             />
           ))}
         </div>

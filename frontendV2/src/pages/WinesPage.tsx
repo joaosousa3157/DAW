@@ -188,7 +188,6 @@ const WinesPage: React.FC = () => {
               name={wine.name}
               price={wine.price}
               rating={wine.rating}
-              onAddToCart={() => handleAddToCart(wine)}
             />
           ))
         ) : (

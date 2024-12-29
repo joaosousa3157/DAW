@@ -6,21 +6,21 @@ const DealsPage: React.FC = () => {
   // Dados fictícios para exibir os produtos em promoção
   const deals = [
     {
-      id: 1,
+      id: "1",
       image: "https://via.placeholder.com/300",
       name: "Wine A - 50% Off",
       price: 25,
       rating: 4.5,
     },
     {
-      id: 2,
+      id: "2",
       image: "https://via.placeholder.com/300",
       name: "Wine B - Buy 1 Get 1 Free",
       price: 30,
       rating: 4.8,
     },
     {
-      id: 3,
+      id: "3",
       image: "https://via.placeholder.com/300",
       name: "Wine C - 30% Off",
       price: 20,
@@ -44,7 +44,6 @@ const DealsPage: React.FC = () => {
               name={deal.name}
               price={deal.price}
               rating={deal.rating}
-              onAddToCart={() => alert(`Adicionado ao carrinho: ${deal.name}`)}
             />
           ))}
         </div>

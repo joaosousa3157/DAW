@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
 
   const sampleWines = [
     {
-      id: 1,
+      id: "1",
       image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
       name: "Château Margaux",
       price: 200,
@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
       region: "France",
     },
     {
-      id: 2,
+      id: "2",
       image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
       name: "Screaming Eagle",
       price: 850,
@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
       region: "USA",
     },
     {
-      id: 3,
+      id: "3",
       image: "https://wine.pt/cdn/shop/products/PlumaAlvarinhoReserva-VinhoBranco-2016_420x.png?v=1711966501",
       name: "Riesling Delight",
       price: 120,
@@ -35,7 +35,7 @@ const HomePage: React.FC = () => {
       region: "Germany",
     },
     {
-      id: 4,
+      id: "4",
       image: "https://wine.pt/cdn/shop/products/automatico_red_loja_420x.png?v=1592838423",
       name: "Barolo King",
       price: 300,
@@ -93,7 +93,6 @@ const HomePage: React.FC = () => {
               name={wine.name}
               price={wine.price}
               rating={wine.rating}
-              onAddToCart={() => alert(`Adicionado ao carrinho: ${wine.name}`)}
             />
           ))}
         </div>
