@@ -49,7 +49,7 @@ const ProfilePage: React.FC = () => {
               id="name"
               name="name"
               placeholder="joao silva" // exemplo de nome
-              defaultValue={user.email.split("@")[0]} // gera nome do email
+              defaultValue={user.username || ""} // pega o username do contexto
             />
           </div>
           <div className="form-group">
