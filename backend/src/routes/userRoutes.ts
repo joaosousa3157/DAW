@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // usa TLS
     auth: {
-        user: '', // email de envio
+        user: 'a81457@ualg.pt', // email de envio
         pass: '', // senha do email
     },
 });
@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
 const sendWelcomeEmail = async (email: string, username: string) => {
     try {
         const mailOptions = {
-            from: '', // email que envia
+            from: 'a81457@ualg.pt', // email que envia
             to: email, // destinatario
             subject: 'Bem-vindo ao Otis Wines!',
             text: `Olá ${username},\n\nObrigado por se registrar no Otis Wines! Estamos felizes em tê-lo conosco.\n\nExplore nossas opções de vinhos e aproveite!\n\nAtenciosamente,\nEquipe Otis Wines`,

@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import "../css/homePage.css";
 import WineCard from "../components/WineCard";
 
 const HomePage: React.FC = () => {
-  const { user, logout } = useUser(); // pega o user logado e a funcao logout
+  const { user, logout } = useUser(); // Pega o user logado e a função logout
+  const navigate = useNavigate(); // Para redirecionar
 
   const sampleWines = [
     {
@@ -50,11 +52,27 @@ const HomePage: React.FC = () => {
       {/* Mensagem de boas-vindas personalizada */}
       {user ? (
         <div className="welcome-message">
-          <p>Olá, <strong>{user.email}</strong>! Bem-vindo de volta.</p>
-          <button onClick={logout} className="logout-button">Sair</button>
+          <p>
+            Olá, <strong>{user.username || user.email}</strong>! Bem-vindo de volta.
+          </p>
+          <button onClick={logout} className="logout-button">
+            Sair
+          </button>
         </div>
       ) : (
-        <p>Por favor, faça login para aproveitar todas as funcionalidades.</p>
+        <div className="login-message">
+          <p>
+            Não está logado?{" "}
+            <span
+              className="login-link"
+              onClick={() => navigate("/login")}
+              style={{ color: "blue", cursor: "pointer" }}
+            >
+              Faça Login
+            </span>{" "}
+            para aproveitar todas as funcionalidades.
+          </p>
+        </div>
       )}
 
       {/* Hero Section */}
@@ -71,11 +89,11 @@ const HomePage: React.FC = () => {
         <h2>Promoções Especiais</h2>
         <div className="promotion-container">
           <div className="promotion-card">
-            <img src="path/to/promo1.jpg" alt="Promoção 1" />
+            <img src="https://via.placeholder.com/150" alt="Promoção 1" />
             <p>Compre 2, leve 1 grátis!</p>
           </div>
           <div className="promotion-card">
-            <img src="path/to/promo2.jpg" alt="Promoção 2" />
+            <img src="https://via.placeholder.com/150" alt="Promoção 2" />
             <p>Vinhos selecionados com 20% de desconto.</p>
           </div>
         </div>

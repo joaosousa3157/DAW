@@ -116,8 +116,8 @@ const RegisterPage: React.FC = () => {
             placeholder="Confirme sua senha" // placeholder para confirmar senha
           />
         </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>} // mostra erro se existir
-        {successMessage && <p className="success-message">{successMessage}</p>} // mostra sucesso se existir
+        {errorMessage && <p className="error-message">{errorMessage}</p>} 
+        {successMessage && <p className="success-message">{successMessage}</p>}
         <button type="submit" className="register-button">
           Registrar
         </button>
