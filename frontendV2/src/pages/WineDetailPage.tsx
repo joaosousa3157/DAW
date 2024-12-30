@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import "../css/wineDetailPage.css";
 
+// interface para o formato de uma review
 interface Review {
   userID: string;
   wineID: string;
@@ -12,19 +13,19 @@ interface Review {
 }
 
 const WineDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Captura o ID do vinho da URL
-  const { user } = useUser(); // Obtém o usuário logado do contexto
-  console.log("Usuário no contexto:", user);
-  const [wine, setWine] = useState<any>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const { id } = useParams<{ id: string }>(); // pega o id do vinho da url
+  const { user } = useUser(); // pega o usuario logado do contexto
+  console.log("Usuario no contexto:", user); // debug
+  const [wine, setWine] = useState<any>(null); // estado para detalhes do vinho
+  const [reviews, setReviews] = useState<Review[]>([]); // estado para reviews
   const [newReview, setNewReview] = useState({
     rating: 0,
     comment: "",
-  });
-  const [errorMessage, setErrorMessage] = useState("");
+  }); // estado para review nova
+  const [errorMessage, setErrorMessage] = useState(""); // estado para erros
 
   useEffect(() => {
-    // Buscar os detalhes do vinho
+    // busca os detalhes do vinho
     fetch(`/api/products/${id}`)
       .then((response) => response.json())
       .then((data) => setWine(data))
@@ -32,63 +33,60 @@ const WineDetailPage: React.FC = () => {
         console.error("Erro ao carregar os detalhes do vinho:", error)
       );
 
-    // Buscar as reviews do vinho específico
+    // busca as reviews do vinho especifico
     fetch(`/api/reviews?wineID=${id}`)
       .then((response) => response.json())
       .then((data) => setReviews(data))
       .catch((error) =>
         console.error("Erro ao carregar as reviews do vinho:", error)
       );
-  }, [id]);
+  }, [id]); // executa toda vez que o id mudar
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
+    e.preventDefault(); // evita refresh da pagina
+
     if (!user) {
-      alert("Você precisa estar logado para enviar uma review.");
+      alert("Voce precisa estar logado para enviar uma review."); // avisa caso nao esteja logado
       return;
     }
-  
+
     const reviewData = {
-      userID: user.id, // Certifique-se de que `user.id` está correto
-      wineID: id, // ID do vinho capturado na URL
-      rating: newReview.rating,
-      comment: newReview.comment,
+      userID: user.id, // pega id do usuario logado
+      wineID: id, // id do vinho
+      rating: newReview.rating, // pega nota da nova review
+      comment: newReview.comment, // pega comentario da nova review
     };
-  
+
     try {
-      console.log("Enviando review:", reviewData); // Log para debug
-  
+      console.log("Enviando review:", reviewData); // debug
+
       const response = await fetch("/api/reviews", {
-        method: "POST",
+        method: "POST", // metodo POST
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", // avisa que é json
         },
-        body: JSON.stringify(reviewData),
+        body: JSON.stringify(reviewData), // transforma dados em json
       });
-  
+
       if (response.ok) {
-        const newReviewData = await response.json();
-        setReviews((prev) => [...prev, newReviewData]);
-        alert("Review enviada com sucesso!");
-        setNewReview({ rating: 0, comment: "" });
-        setErrorMessage("");
+        const newReviewData = await response.json(); // pega review criada
+        setReviews((prev) => [...prev, newReviewData]); // adiciona ao estado
+        alert("Review enviada com sucesso!"); // avisa sucesso
+        setNewReview({ rating: 0, comment: "" }); // limpa os campos
+        setErrorMessage(""); // limpa mensagem de erro
       } else {
-        const errorData = await response.json();
-        console.error("Erro ao enviar review:", errorData);
-        setErrorMessage(errorData.error || "Erro ao enviar review.");
+        const errorData = await response.json(); // pega erro
+        console.error("Erro ao enviar review:", errorData); // debug
+        setErrorMessage(errorData.error || "Erro ao enviar review."); // exibe erro
       }
     } catch (err) {
-      console.error("Erro ao enviar review:", err);
-      setErrorMessage("Ocorreu um erro ao enviar a review.");
+      console.error("Erro ao enviar review:", err); // debug
+      setErrorMessage("Ocorreu um erro ao enviar a review."); // exibe erro
     }
   };
-  
-  
-  
 
   if (!wine) {
-    return <p>Carregando...</p>;
+    return <p>Carregando...</p>; // mostra loading enquanto o vinho nao carrega
   }
 
   return (
@@ -99,27 +97,27 @@ const WineDetailPage: React.FC = () => {
         <strong>Tipo:</strong> {wine.type}
       </p>
       <p>
-        <strong>Região:</strong> {wine.region}
+        <strong>Regiao:</strong> {wine.region}
       </p>
       <p className="wine-price">
-        <strong>Preço:</strong> €{wine.price.toFixed(2)}
+        <strong>Preco:</strong> €{wine.price.toFixed(2)}
       </p>
       <p>
         <strong>Ano:</strong> {wine.year}
       </p>
       <p>
-        <strong>Teor Alcoólico:</strong> {wine.vol}%
+        <strong>Teor Alcoolico:</strong> {wine.vol}%
       </p>
       <p>
         <strong>Capacidade:</strong> {wine.capacity}ml
       </p>
       <div className="wine-description">
         <p>
-          <strong>Descrição:</strong> {wine.description}
+          <strong>Descricao:</strong> {wine.description}
         </p>
       </div>
       <p className="wine-rating">
-        <strong>Avaliação:</strong> {"★".repeat(Math.floor(wine.rating))}
+        <strong>Avaliacao:</strong> {"★".repeat(Math.floor(wine.rating))}
       </p>
 
       <section className="reviews-section">
@@ -131,7 +129,7 @@ const WineDetailPage: React.FC = () => {
                 <strong>Nota:</strong> {review.rating} ★
               </p>
               <p>
-                <strong>Comentário:</strong> {review.comment}
+                <strong>Comentario:</strong> {review.comment}
               </p>
               <p>
                 <small>{review.dateTime}</small>
@@ -159,7 +157,7 @@ const WineDetailPage: React.FC = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="comment">Comentário:</label>
+            <label htmlFor="comment">Comentario:</label>
             <textarea
               id="comment"
               rows={3}

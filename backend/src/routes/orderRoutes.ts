@@ -6,8 +6,7 @@ import { productDB } from '../dbInstances';
 const router: Router = express.Router();
 const orderWorker: orderDBWorker = new orderDBWorker();
 
-
-
+// trata erros e devolve resposta com status 500
 const handleError = (res: express.Response, error: unknown) => {
     if (error instanceof Error) {
         res.status(500).json({ error: error.message });
@@ -16,9 +15,11 @@ const handleError = (res: express.Response, error: unknown) => {
     }
 };
 
+// rota para obter pedidos
 router.get('/', async (req, res) => {
     try 
     {
+        // se nao houver query devolve todos os pedidos
         if (Object.keys(req.query).length === 0) 
         {
             const wines = await orderWorker.getAllOrders();
@@ -26,6 +27,7 @@ router.get('/', async (req, res) => {
         } 
         else 
         {
+            // filtra pedidos com base nos parametros da query
             console.log(req.query)
             const wines = await orderWorker.filterOrders(req.query);
 
@@ -39,18 +41,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// configura o nodemailer para enviar emails
 const transporter = nodemailer.createTransport({
     host: 'smtp.office365.com',
     port: 587,                 
     secure: false,           
     auth: {
-        user: '@ualg.pt', // EMAIL DA UNI
-        pass: '',       // SENHA
+        user: '@ualg.pt', // email da uni
+        pass: '',       // senha
     }
 });
 
+// funcao para enviar confirmacao de pedido por email
 const sendOrderConfirmationEmail = async (email: string, order: any) => {
     try {
+        // obtem detalhes dos vinhos no pedido
         const wineDetails = await Promise.all(order.wineIDs.map((wineID: string) => {
             return new Promise((resolve, reject) => {
                 productDB.findOne({ id: parseInt(wineID) }, (err: Error | null, wine: any) => {
@@ -60,13 +65,16 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
             });
         }));
 
+        // formata os vinhos para enviar no email
         const formattedWines = wineDetails
             .filter((wine: any) => wine !== null)
             .map((wine: any) => `- ${wine.name} (${wine.type})`)
             .join('\n');
 
+        // pega data e hora atual formatada
         const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
 
+        // cria configuracao do email
         const mailOptions = {
             from: '@ualg.pt', // email da uni
             to: email,
@@ -74,6 +82,7 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
             text: `Obrigado pela sua compra!\n\nDetalhes do pedido:\n${formattedWines}\n\nHora da compra: ${now}\n\nAgradecemos pela preferência!`,
         };
 
+        // envia o email
         await transporter.sendMail(mailOptions);
         console.log('E-mail de confirmação enviado com sucesso!');
     } catch (error) {
@@ -81,15 +90,17 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
     }
 };
 
-
+// rota para criar um novo pedido
 router.post('/', async (req, res) => {
     
     const newOrder = req.body;
 
     try 
     {
+        // insere o pedido na base de dados
         const createdOrder = await orderWorker.insertOrder(newOrder);
 
+        // envia email de confirmacao se email do usuario existir
         const userEmail = newOrder.userEmail;
         if (userEmail) {
             sendOrderConfirmationEmail(userEmail, createdOrder);
@@ -103,4 +114,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-export default router
+export default router;

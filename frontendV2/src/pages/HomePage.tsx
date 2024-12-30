@@ -1,10 +1,10 @@
 import React from "react";
-import { useUser } from "../context/UserContext"; // Importa o contexto do usuário
+import { useUser } from "../context/UserContext";
 import "../css/homePage.css";
 import WineCard from "../components/WineCard";
 
 const HomePage: React.FC = () => {
-  const { user, logout } = useUser(); // Obtém o usuário logado e a função de logout
+  const { user, logout } = useUser(); // pega o user logado e a funcao logout
 
   const sampleWines = [
     {
