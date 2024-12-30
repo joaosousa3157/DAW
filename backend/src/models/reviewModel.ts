@@ -55,4 +55,13 @@ export default class ReviewdbWorker {
             });
         });
     }
+
+    public getReviewsByWineID(wineID: string): Promise<Review[]> {
+        return new Promise((resolve, reject) => {
+            this.db.find({ wineID }, (err: Error | null, reviews: Review[]) => {
+                if (err) reject(err);
+                else resolve(reviews);
+            });
+        });
+    }
 }

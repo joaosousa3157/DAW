@@ -62,15 +62,15 @@ const WineDetailPage: React.FC = () => {
 
     const fetchWineReviews = async () => {
       try {
-        const response = await fetch(`/api/reviews?wineID=${id}`);
-        if (!response.ok) throw new Error("Erro ao buscar reviews.");
-        const data = await response.json();
-        setReviews(data);
+          const response = await fetch(`/api/reviews?wineID=${id}`);
+          if (!response.ok) throw new Error("Erro ao buscar reviews.");
+          const data = await response.json();
+          setReviews(data);
       } catch (error) {
-        console.error("Erro ao carregar reviews:", error);
-        setErrorMessage("Erro ao carregar as reviews.");
+          console.error("Erro ao carregar reviews:", error);
+          setErrorMessage("Erro ao carregar as reviews.");
       }
-    };
+  };
 
     fetchWineDetails();
     fetchWineReviews();

@@ -16,11 +16,19 @@ const handleError = (res: express.Response, error: unknown): void => {
     }
 };
 
+
 // rota para obter todas as reviews
 router.get('/', async (req, res): Promise<void> => {
+    const { wineID } = req.query;
+
     try {
-        const reviews = await reviewWorker.getAllReviews(); // busca todas as reviews
-        res.status(200).json(reviews); // envia as reviews
+        let reviews;
+        if (wineID) {
+            reviews = await reviewWorker.getReviewsByWineID(wineID as string);
+        } else {
+            reviews = await reviewWorker.getAllReviews();
+        }
+        res.status(200).json(reviews);
     } catch (error) {
         handleError(res, error);
     }
