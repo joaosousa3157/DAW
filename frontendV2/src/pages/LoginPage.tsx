@@ -28,7 +28,8 @@ const LoginPage: React.FC = () => {
       const data = await response.json();
   
       if (response.ok) {
-        login({ id: data.user._id, email: data.user.email }); // salva no contexto
+        // salva no contexto incluindo username
+        login({ id: data.user._id, email: data.user.email, username: data.user.username });
         alert("login feito com sucesso"); // msg sucesso
         setErrorMessage(""); // limpa msg erro
         navigate("/"); // vai para home

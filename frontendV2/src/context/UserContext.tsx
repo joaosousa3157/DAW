@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-// tipo do contexto com id e email
+// tipo do contexto com id, email e username
 interface UserContextType {
-  user: { id: string; email: string } | null;
-  login: (userData: { id: string; email: string }) => void;
+  user: { id: string; email: string; username: string } | null; // adicionado username
+  login: (userData: { id: string; email: string; username: string }) => void;
   logout: () => void;
 }
 
@@ -12,13 +12,13 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // estado inicial do user (tenta recuperar do localStorage)
-  const [user, setUser] = useState<{ id: string; email: string } | null>(() => {
+  const [user, setUser] = useState<{ id: string; email: string; username: string } | null>(() => {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null; // carrega o user se existe
   });
 
   // login salva user no estado e localStorage
-  const login = (userData: { id: string; email: string }) => {
+  const login = (userData: { id: string; email: string; username: string }) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };
