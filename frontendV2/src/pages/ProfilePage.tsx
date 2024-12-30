@@ -8,9 +8,12 @@ interface Order {
 }
 
 const ProfilePage: React.FC = () => {
-  const { user, logout } = useUser(); // pega o user logado e a funcao de logout
+  const { user, logout, login } = useUser(); // adiciona login ao contexto
   const [orders, setOrders] = useState<Order[]>([]); // guarda pedidos
   const [isLoading, setIsLoading] = useState(true); // flag pra loading
+  const [username, setUsername] = useState(user?.username || ""); // estado para o username
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!user) return; // se nao tem user, nao faz nada
@@ -28,8 +31,52 @@ const ProfilePage: React.FC = () => {
       });
   }, [user]); // roda quando o user muda
 
+  const handleUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!user) {
+      setErrorMessage("Você precisa estar logado para atualizar as informações.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username }),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json(); // Usuário atualizado do backend
+        console.log("Usuário atualizado do backend:", updatedUser); // Log do backend
+        setSuccessMessage("Nome de usuário atualizado com sucesso!");
+        setErrorMessage("");
+
+        // Atualiza todo o contexto com os dados recebidos
+        login({
+          id: updatedUser._id,
+          email: updatedUser.email,
+          username: updatedUser.username,
+        });
+        console.log("Contexto atualizado:", {
+          id: updatedUser._id,
+          email: updatedUser.email,
+          username: updatedUser.username,
+        });
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || "Erro ao atualizar informações.");
+        setSuccessMessage("");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar informações:", error);
+      setErrorMessage("Ocorreu um erro. Tente novamente.");
+      setSuccessMessage("");
+    }
+  };
+
   if (!user) {
-    return <p>voce precisa fazer login pra acessar esta pagina.</p>; // mensagem se nao logado
+    return <p>Você precisa fazer login para acessar esta página.</p>; // mensagem se nao logado
   }
 
   return (
@@ -41,7 +88,7 @@ const ProfilePage: React.FC = () => {
 
       <section className="profile-details">
         <h2>informacoes pessoais</h2>
-        <form>
+        <form onSubmit={handleUpdate}>
           <div className="form-group">
             <label htmlFor="name">nome:</label>
             <input
@@ -49,7 +96,8 @@ const ProfilePage: React.FC = () => {
               id="name"
               name="name"
               placeholder="joao silva" // exemplo de nome
-              defaultValue={user.username || ""} // pega o username do contexto
+              value={username} // pega o username do estado
+              onChange={(e) => setUsername(e.target.value)} // atualiza o estado
             />
           </div>
           <div className="form-group">
@@ -63,6 +111,8 @@ const ProfilePage: React.FC = () => {
               readOnly // nao deixa editar
             />
           </div>
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="update-button">
             atualizar informacoes
           </button>

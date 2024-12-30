@@ -123,5 +123,34 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'An internal error occurred.' });
     }
 });
+router.put('/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { username } = req.body;
+
+    if (!username) {
+        res.status(400).json({ error: 'O campo username é obrigatório.' });
+        return;
+    }
+
+    try {
+        const updatedCount = await userWorker.updateUser(userId, { username });
+        console.log("Número de registros atualizados:", updatedCount); // Log para debug
+
+        if (updatedCount > 0) {
+            const updatedUser = await userWorker.getUserById(userId); // Busca o usuário atualizado
+            console.log("Usuário atualizado no banco de dados:", updatedUser); // Log para debug
+            res.status(200).json(updatedUser); // Retorna o usuário atualizado
+        } else {
+            res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({ error: 'Erro interno ao atualizar usuário.' });
+    }
+});
+
+  
+
+
 
 export default router;

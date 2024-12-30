@@ -2,8 +2,8 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 
 // tipo do contexto com id, email e username
 interface UserContextType {
-  user: { id: string; email: string; username: string } | null; // adicionado username
-  login: (userData: { id: string; email: string; username: string }) => void;
+  user: { id: string; email: string; username: string } | null;
+  login: (userData: Partial<{ id: string; email: string; username: string }>) => void;
   logout: () => void;
 }
 
@@ -18,9 +18,10 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   // login salva user no estado e localStorage
-  const login = (userData: { id: string; email: string; username: string }) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+  const login = (userData: Partial<{ id: string; email: string; username: string }>) => {
+    const updatedUser = { ...user, ...userData }; // mescla o estado atual com os novos dados
+    setUser(updatedUser); // atualiza o estado global
+    localStorage.setItem("user", JSON.stringify(updatedUser)); // salva no localStorage
   };
 
   // logout limpa estado e localStorage

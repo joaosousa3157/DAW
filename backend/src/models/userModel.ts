@@ -42,14 +42,20 @@ export default class userdbWorker {
         });
     }
 
-    public updateUser(id: number, updatedUser: User): Promise<number> {
-        // atualiza um utilizador pelo id
+    public updateUser(id: string, updatedUser: Partial<User>): Promise<number> {
         return new Promise((resolve, reject) => {
-            this.db.update({_id: id }, updatedUser, {}, (err: Error | null, numUpdated: number) => {
-                err ? reject(err) : resolve(numUpdated); // resolve com o numero de utilizadores atualizados ou rejeita se erro
-            });
+          this.db.update(
+            { _id: id }, // Filtra pelo _id correto
+            { $set: updatedUser }, // Atualiza apenas os campos necessários
+            {},
+            (err: Error | null, numUpdated: number) => {
+              err ? reject(err) : resolve(numUpdated); // Resolve com o número de documentos atualizados
+            }
+          );
         });
-    }
+      }
+      
+    
 
     public deleteUser(id: string): Promise<number> {
         // remove um utilizador pelo id
