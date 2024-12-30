@@ -8,7 +8,7 @@ interface PaymentFormProps {
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
   const { checkoutItems } = useCheckout(); // Acessando os itens do carrinho do contexto
-  const [useShippingAsBilling, setUseShippingAsBilling] = useState(false);
+  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
