@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       <div className="footer-container">
         <div className="footer-about">
           <h2>Otis Wines</h2>
-          <p>Celebrando os melhores momentos da vida com vinhos requintados desde 2024.</p>
+          <p>A celebrar os melhores momentos da vida com vinhos requintados desde 2024.</p>
         </div>
 
         <div className="footer-links">
@@ -24,8 +24,9 @@ const Footer: React.FC = () => {
         <div className="footer-contact">
           <h3>Contato</h3>
           <p>Email: <a href="mailto:info@otiswines.com">info@otiswines.com</a></p>
-          <p>Telefone: +1 (555) 123-4567</p>
-          <p>Endereço: 123 Vineyard Lane, Wine Country, CA 90210</p>
+          <p>Telefone: +351 912 345 678</p>
+          <p>Endereço: Avenida da Liberdade, nº 123, 3º Andar
+          8000-123 Faro Portugal</p>
         </div>
       </div>
 

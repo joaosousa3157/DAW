@@ -1,5 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
+import { UserProvider } from "./context/UserContext";
+import { CheckoutProvider } from "./context/CheckoutContext";
+import "./css/global.css";
+
 import {
   AboutPage,
   CheckoutPage,
@@ -13,12 +19,8 @@ import {
   WineDetailPage,
 } from "./pages/index";
 
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-import { UserProvider } from "./context/UserContext";
-import { CheckoutProvider } from "./context/CheckoutContext";
 
-import "./css/global.css";
+
 
 const App: React.FC = () => {
   return (
