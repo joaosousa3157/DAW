@@ -1,18 +1,31 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/registerPage.css"; // Certifique-se de ter o CSS correspondente.
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(""); // Novo campo
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (!isValidEmail(email)) {
+      setErrorMessage("Por favor, insira um email válido.");
+      return;
+    }
+
     // Validação básica
-    if (!email || !password || !confirmPassword) {
+    if (!email || !username || !password || !confirmPassword) {
       setErrorMessage("Por favor, preencha todos os campos.");
       return;
     }
@@ -23,26 +36,34 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
+      console.log("Dados enviados ao backend:", { email, username, password });
       // Enviar solicitação ao backend para criar um novo usuário
       const response = await fetch("/api/users/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, username, password }), // Inclui o username
       });
 
-      console.log("Resposta do servidor:", response);
+      console.log("Resposta bruta do servidor:", response);
 
       if (response.ok) {
         const data = await response.json();
         setSuccessMessage("Usuário registrado com sucesso!");
         setErrorMessage("");
+
+        setTimeout(() => {
+          navigate("/login"); // Redireciona para a página de login
+        }, 2000);
+        
         setEmail("");
+        setUsername(""); // Limpa o username
         setPassword("");
         setConfirmPassword("");
       } else {
         const errorData = await response.json();
+        console.error("Erro ao registrar usuário:", errorData);
         setErrorMessage(errorData.error || "Falha ao registrar usuário.");
       }
     } catch (error) {
@@ -63,6 +84,16 @@ const RegisterPage: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Digite seu email"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Digite seu username"
           />
         </div>
         <div className="form-group">

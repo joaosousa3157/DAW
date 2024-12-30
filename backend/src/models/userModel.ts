@@ -12,15 +12,16 @@ export default class userdbWorker {
 
     private db = userDB;
 
-    async insertUser(newUser: { email: string; password: string }) {
+    async insertUser(newUser: { email: string; username: string; password: string }) {
         const existingUser = await this.getUserByEmail(newUser.email);
         if (existingUser) {
-            throw new Error("Email already registered.");
+            throw new Error("Email já registrado.");
         }
     
-        const result = await this.db.insert(newUser); 
+        const result = await this.db.insert(newUser); // Agora inclui email, username e password
         return result;
     }
+    
     
 
     public getAllUsers(): Promise<User[]> {
