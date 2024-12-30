@@ -42,7 +42,8 @@ router.post('/', async (req, res): Promise<void> => {
         const orders = await orderWorker.filterOrders({ userID });
         console.log("Pedidos encontrados para o usuário:", orders);
 
-        const purchasedWine = orders.some(order => order.wineIDs.includes(wineID)); // verifica se vinho esta nos pedidos
+        const purchasedWine = orders.some(order => Array.isArray(order.wineIDs) && order.wineIDs.includes(wineID));
+        // verifica se vinho esta nos pedidos
         console.log(`O vinho ${wineID} foi comprado?`, purchasedWine);
 
         if (!purchasedWine) {
