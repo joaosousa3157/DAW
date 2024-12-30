@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import UserIcon from "../images/user.svg";
 import CartIcon from "../images/cart.svg";
-import SearchIcon from "../images/search.svg";
 
 import '../css/navBar.css';
 
@@ -31,7 +30,6 @@ const NavBar: React.FC = () => {
       <div className="nav-item icons-container">
         <Link to='profile'><UserIcon className="nav-icon" title="User Profile" /></Link>
         <Link to='cart'><CartIcon className="nav-icon" title="Shopping Cart" /></Link>
-        <SearchIcon className="nav-icon" title="Search" />
       </div>
     </nav>
   );
