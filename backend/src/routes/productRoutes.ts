@@ -34,6 +34,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const wine = await productsWorker.getProductById(parseInt(id, 10));
+      if (wine) {
+        res.status(200).json(wine);
+      } else {
+        res.status(404).json({ error: "Vinho não encontrado." });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao buscar o vinho." });
+    }
+  });
+  
+
 router.post('/', async (req, res) => {
     const newWine = req.body;
 

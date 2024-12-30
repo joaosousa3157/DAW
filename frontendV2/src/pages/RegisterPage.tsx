@@ -32,6 +32,8 @@ const RegisterPage: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("Resposta do servidor:", response);
+
       if (response.ok) {
         const data = await response.json();
         setSuccessMessage("Usuário registrado com sucesso!");

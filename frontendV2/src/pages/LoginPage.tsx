@@ -12,36 +12,31 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    // Simple validation
+  
     if (!email || !password) {
-      setErrorMessage("Please fill in both fields.");
+      setErrorMessage("Preencha todos os campos.");
       return;
     }
-
+  
     try {
-      // Realiza a requisição para o back-end
       const response = await fetch("/api/users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        login({ email }); // Atualiza o contexto com o usuário logado
-        navigate("/"); // Redireciona para a página Home
+        login({ id: data.user._id, email: data.user.email }); // Passa id e email ao contexto
+        alert("Login realizado com sucesso!");
         setErrorMessage("");
-        // Adicione lógica adicional aqui (ex: redirecionamento ou armazenamento de token)
       } else {
-        setErrorMessage(data.error || "Login failed.");
+        setErrorMessage(data.error || "Erro ao fazer login.");
       }
     } catch (error) {
-      console.error("Error during login:", error);
-      setErrorMessage("An error occurred. Please try again.");
+      console.error("Erro ao fazer login:", error);
+      setErrorMessage("Ocorreu um erro. Tente novamente.");
     }
   };
 

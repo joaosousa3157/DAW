@@ -10,6 +10,7 @@ import {
   ProfilePage,
   LoginPage,
   RegisterPage,
+  WineDetailPage,
 } from "./pages/index";
 
 import NavBar from "./components/NavBar";
@@ -35,6 +36,7 @@ const App: React.FC = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/wines/:id" element={<WineDetailPage />} />
           </Routes>
           <Footer />
         </Router>

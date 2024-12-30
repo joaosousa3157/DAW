@@ -1,25 +1,29 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
+// Definição do tipo de contexto
 interface UserContextType {
-  user: { email: string } | null;
-  login: (userData: { email: string }) => void;
+  user: { id: string; email: string } | null; // Incluímos o id
+  login: (userData: { id: string; email: string }) => void;
   logout: () => void;
 }
 
+// Criação do contexto
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<{ email: string } | null>(() => {
-    // Recupera o usuário do localStorage ao carregar o app
+  // Estado inicial do usuário (recupera do localStorage se disponível)
+  const [user, setUser] = useState<{ id: string; email: string } | null>(() => {
     const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
+    return savedUser ? JSON.parse(savedUser) : null; // Garante que id e email estão disponíveis
   });
 
-  const login = (userData: { email: string }) => {
+  // Função de login
+  const login = (userData: { id: string; email: string }) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Salva o usuário no localStorage
+    localStorage.setItem("user", JSON.stringify(userData)); // Salva id e email no localStorage
   };
 
+  // Função de logout
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user"); // Remove o usuário do localStorage
@@ -32,10 +36,11 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
+// Hook personalizado para acessar o contexto
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error("useUser deve ser usado dentro de um UserProvider");
   }
   return context;
 };

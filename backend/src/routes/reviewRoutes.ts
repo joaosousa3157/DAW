@@ -27,6 +27,7 @@ router.get('/', async (req, res): Promise<void> => {
 
 // Add a review
 router.post('/', async (req, res): Promise<void> => {
+    console.log("Review data received:", req.body);
     const { userID, wineID, rating, comment } = req.body;
 
     if (!userID || !wineID || rating === undefined || rating < 1 || rating > 5) {
@@ -37,7 +38,10 @@ router.post('/', async (req, res): Promise<void> => {
     try {
         // Verify user purchased the wine
         const orders = await orderWorker.filterOrders({ userID });
+        console.log("Pedidos encontrados para o usuário:", orders);
+
         const purchasedWine = orders.some(order => order.wineIDs.includes(wineID));
+        console.log(`O vinho ${wineID} foi comprado?`, purchasedWine);
 
         if (!purchasedWine) {
             res.status(403).json({ error: 'User must purchase the wine before reviewing it.' });

@@ -26,17 +26,21 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const newUser = req.body;
-    try 
-    {
-        const createdUser = await userWorker.insertUser(newUser);
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        res.status(400).json({ error: 'Email and password are required.' });
+        return;
+    }
+
+    try {
+        const createdUser = await userWorker.insertUser({ email, password });
         res.status(201).json(createdUser);
-    } 
-    catch (error) 
-    {
+    } catch (error) {
         handleError(res, error);
     }
 });
+
 
 router.delete('/:id', async (req, res) => {
     const userID = req.params.id;
