@@ -1,32 +1,32 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
-// Definição do tipo de contexto
+// tipo do contexto com id e email
 interface UserContextType {
-  user: { id: string; email: string } | null; // Incluímos o id
+  user: { id: string; email: string } | null;
   login: (userData: { id: string; email: string }) => void;
   logout: () => void;
 }
 
-// Criação do contexto
+// cria o contexto
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Estado inicial do usuário (recupera do localStorage se disponível)
+  // estado inicial do user (tenta recuperar do localStorage)
   const [user, setUser] = useState<{ id: string; email: string } | null>(() => {
     const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null; // Garante que id e email estão disponíveis
+    return savedUser ? JSON.parse(savedUser) : null; // carrega o user se existe
   });
 
-  // Função de login
+  // login salva user no estado e localStorage
   const login = (userData: { id: string; email: string }) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Salva id e email no localStorage
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  // Função de logout
+  // logout limpa estado e localStorage
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Remove o usuário do localStorage
+    localStorage.removeItem("user");
   };
 
   return (
@@ -36,7 +36,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Hook personalizado para acessar o contexto
+// hook para usar o contexto
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {

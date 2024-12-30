@@ -19,4 +19,4 @@ export const userDB = new Datastore({
 export const productDB = new Datastore({
     filename: path.join(__dirname, 'models', 'database', 'products.db'),
     autoload: true,
-});
+}); //serve para dar load as bd, instancias

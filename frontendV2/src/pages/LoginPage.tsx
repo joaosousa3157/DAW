@@ -1,72 +1,73 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import para redirecionar
-import { useUser } from "../context/UserContext";
-import "../css/loginPage.css"; // Add your CSS file for styling
+import { useNavigate } from "react-router-dom"; // para redirecionar
+import { useUser } from "../context/UserContext"; // contexto do user
+import "../css/loginPage.css"; // css
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const { login } = useUser(); // Acessa o contexto do usuário
-  const navigate = useNavigate();
+  const [email, setEmail] = useState(""); // email
+  const [password, setPassword] = useState(""); // password
+  const [errorMessage, setErrorMessage] = useState(""); // msg de erro
+  const { login } = useUser(); // login do contexto
+  const navigate = useNavigate(); // para redirecionar
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault(); // parar o submit default
   
     if (!email || !password) {
-      setErrorMessage("Preencha todos os campos.");
+      setErrorMessage("preenche todos os campos"); // valida campos
       return;
     }
   
     try {
       const response = await fetch("/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        method: "POST", // metodo post
+        headers: { "Content-Type": "application/json" }, // tipo json
+        body: JSON.stringify({ email, password }), // manda email e password
       });
   
       const data = await response.json();
   
       if (response.ok) {
-        login({ id: data.user._id, email: data.user.email }); // Passa id e email ao contexto
-        alert("Login realizado com sucesso!");
-        setErrorMessage("");
+        login({ id: data.user._id, email: data.user.email }); // salva no contexto
+        alert("login feito com sucesso"); // msg sucesso
+        setErrorMessage(""); // limpa msg erro
+        navigate("/"); // vai para home
       } else {
-        setErrorMessage(data.error || "Erro ao fazer login.");
+        setErrorMessage(data.error || "erro no login"); // mostra erro do back
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      setErrorMessage("Ocorreu um erro. Tente novamente.");
+      console.error("erro no login:", error); // log do erro
+      setErrorMessage("erro, tenta de novo"); // erro generico
     }
   };
 
   return (
     <div className="login-container">
-      <h1>Login</h1>
+      <h1>login</h1>
       <form onSubmit={handleSubmit} className="login-form">
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">email:</label>
           <input
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
+            onChange={(e) => setEmail(e.target.value)} // pega valor
+            placeholder="teu email"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">password:</label>
           <input
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
+            onChange={(e) => setPassword(e.target.value)} // pega valor
+            placeholder="tua password"
           />
         </div>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* mostra erro */}
         <button type="submit" className="login-button">
-          Login
+          login
         </button>
       </form>
     </div>
