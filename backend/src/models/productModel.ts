@@ -46,15 +46,17 @@ export default class productsdbWorker
 
     }
 
-    public getProductById(id: number): Promise<Product | null>
-    {
-        // devolve um produto especifico pelo id
-        return new Promise((resolve, reject) =>{
-
-            this.db.findOne({ id: id }, (err: Error | null, product: Product | null) => {
-
-                err ? reject(err) : resolve(product); // rejeita se erro, resolve se encontrado
-
+    public async getProductById(id: string): Promise<Product | null> {
+        console.log("Buscando vinho com ID:", id); // Log para debug
+        return new Promise((resolve, reject) => {
+            this.db.findOne({ _id: id }, (err: Error | null, product: Product | null) => {
+                if (err) {
+                    console.error("Erro ao buscar produto:", err); // Log de erro
+                    reject(err);
+                } else {
+                    console.log("Produto encontrado:", product); // Log do produto
+                    resolve(product);
+                }
             });
         });
     }

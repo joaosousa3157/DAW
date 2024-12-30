@@ -9,6 +9,7 @@ interface WineCardProps {
   name: string;
   price: number;
   rating: number;
+  onClick?: () => void; // Propriedade opcional para lidar com cliques no card
 }
 
 const WineCard: React.FC<WineCardProps> = ({
@@ -17,6 +18,7 @@ const WineCard: React.FC<WineCardProps> = ({
   name,
   price,
   rating,
+  onClick, // Desestrutura a propriedade onClick
 }) => {
   const { addToCheckout } = useCheckout();
 
@@ -31,7 +33,7 @@ const WineCard: React.FC<WineCardProps> = ({
   };
 
   return (
-    <div className="wine-card">
+    <div className="wine-card" onClick={onClick}> {/* Adiciona suporte para onClick */}
       <div className="wine-image-container">
         <Link to={"/wines/" + id}>
           <img src={image} alt={name} className="wine-image" />
