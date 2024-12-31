@@ -4,67 +4,74 @@ import WineCard from "../components/WineCard";
 import "../css/winesPage.css";
 
 const WinesPage: React.FC = () => {
+  // estado para armazenar os dados dos vinhos
   const [winesData, setWinesData] = useState<any[]>([]);
+  // estado para armazenar mensagens de erro
   const [errorMessage, setErrorMessage] = useState("");
+  // estado para os filtros aplicados
   const [filters, setFilters] = useState({
-    region: [] as string[],
-    type: [] as string[],
-    price: [] as string[],
-    year: [] as number[],
-    rating: [] as number[],
+    region: [] as string[], // filtro por regiao
+    type: [] as string[], // filtro por tipo
+    price: [] as string[], // filtro por faixa de preco
+    year: [] as number[], // filtro por ano
+    rating: [] as number[], // filtro por avaliacao
   });
 
+  // busca os dados dos vinhos quando a pagina carrega
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("/api/products?category=wine");
-        setWinesData(response.data);
+        const response = await axios.get("/api/products?category=wine"); // faz a requisicao para a API
+        setWinesData(response.data); // armazena os dados recebidos
       } catch (error) {
-        console.error("Erro ao buscar dados dos vinhos:", error);
-        setErrorMessage("Não foi possível carregar os vinhos. Tente novamente.");
+        console.error("Erro ao buscar dados dos vinhos:", error); // loga o erro
+        setErrorMessage("Nao foi possivel carregar os vinhos. Tente novamente."); // mensagem de erro
       }
     };
 
-    fetchWines();
+    fetchWines(); // executa a busca
   }, []);
 
-  // Filters
-  const regionFilters = ["Alentejo", "Bairrada", "Beira Interior", "Dão", "Douro", "Península de Setúbal", "Tejo"];
-  const typeFilters = ["Tinto", "Branco", "Verde"];
-  const priceFilters = ["Abaixo de 5€", "5€ - 10€", "10€ - 15€", "15€ - 20€", "20€ - 25€", "Acima de 25€"];
-  const ratingFilters = [3, 4, 4.5];
-  const yearFilters = Array.from({ length: 11 }, (_, i) => 2013 + i);
+  // definicao dos filtros disponiveis
+  const regionFilters = ["Alentejo", "Bairrada", "Beira Interior", "Dão", "Douro", "Península de Setúbal", "Tejo"]; // regioes
+  const typeFilters = ["Tinto", "Branco", "Verde"]; // tipos de vinho
+  const priceFilters = ["Abaixo de 5€", "5€ - 10€", "10€ - 15€", "15€ - 20€", "20€ - 25€", "Acima de 25€"]; // faixas de preco
+  const ratingFilters = [3, 4, 4.5]; // notas minimas
+  const yearFilters = Array.from({ length: 11 }, (_, i) => 2013 + i); // anos de producao
 
+  // funcao para lidar com alteracoes nos filtros
   const handleCheckboxChange = (
-    filterName: keyof typeof filters,
-    value: string | number
+    filterName: keyof typeof filters, // nome do filtro
+    value: string | number // valor do filtro
   ) => {
     setFilters((prevFilters) => {
-      const currentValues = prevFilters[filterName] as (string | number)[];
+      const currentValues = prevFilters[filterName] as (string | number)[]; // pega os valores atuais do filtro
       return {
         ...prevFilters,
         [filterName]: currentValues.includes(value)
-          ? currentValues.filter((v) => v !== value)
-          : [...currentValues, value],
+          ? currentValues.filter((v) => v !== value) // remove o valor se ja estiver selecionado
+          : [...currentValues, value], // adiciona o valor se nao estiver selecionado
       };
     });
   };
 
+  // aplica os filtros aos dados dos vinhos
   const filteredWines = winesData.filter((wine) => {
     return (
-      (filters.region.length === 0 || filters.region.includes(wine.region)) &&
-      (filters.type.length === 0 || filters.type.includes(wine.type)) &&
-      (filters.price.length === 0 ||
-        (filters.price.includes("Abaixo de 5€") && wine.price < 5) ||
+      (filters.region.length === 0 || filters.region.includes(wine.region)) && // filtra por regiao
+      (filters.type.length === 0 || filters.type.includes(wine.type)) && // filtra por tipo
+      (filters.price.length === 0 || // filtra por preco
+        (filters.price.includes("Abaixo de 5€") && wine.price < 5) || 
         (filters.price.includes("5€ - 10€") && wine.price >= 5 && wine.price <= 10) ||
         (filters.price.includes("10€ - 15€") && wine.price > 10 && wine.price <= 15) ||
         (filters.price.includes("15€ - 20€") && wine.price > 15 && wine.price <= 20) ||
         (filters.price.includes("20€ - 25€") && wine.price > 20 && wine.price <= 25) ||
         (filters.price.includes("Acima de 25€") && wine.price > 25)) &&
-      (filters.rating.length === 0 || filters.rating.some((rating) => wine.rating >= rating)) &&
-      (filters.year.length === 0 || filters.year.includes(wine.year))
+      (filters.rating.length === 0 || filters.rating.some((rating) => wine.rating >= rating)) && // filtra por avaliacao
+      (filters.year.length === 0 || filters.year.includes(wine.year)) // filtra por ano
     );
   });
+
 
   return (
     <div className="product-page">

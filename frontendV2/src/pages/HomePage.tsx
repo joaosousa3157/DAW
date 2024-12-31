@@ -5,35 +5,38 @@ import axios from "axios";
 import "../css/homePage.css";
 
 const HomePage: React.FC = () => {
-  const [packs, setPacks] = useState([]);
-  const [tintos, setTintos] = useState([]);
-  const [brancos, setBrancos] = useState([]);
+  const [packs, setPacks] = useState([]); // estado para armazenar os dados de "packs"
+  const [tintos, setTintos] = useState([]); // estado para armazenar os dados de vinhos tintos
+  const [brancos, setBrancos] = useState([]); // estado para armazenar os dados de vinhos brancos
 
+  // useEffect para realizar uma ação ao montar o componente
   useEffect(() => {
+    // função assíncrona para buscar dados
     const fetchData = async () => {
       try {
-        // Fetch Packs
+        // busca os dados da categoria "pack"
         const packResponse = await axios.get("/api/products?category=pack");
-        setPacks(packResponse.data.slice(0, 4));
+        setPacks(packResponse.data.slice(0, 4)); // atualiza o estado com os primeiros 4 itens
 
-        // Fetch Tintos
+        // busca os dados de vinhos tintos
         const tintosResponse = await axios.get(
           "/api/products?category=wine&type=Tinto"
         );
-        setTintos(tintosResponse.data.slice(0, 4));
+        setTintos(tintosResponse.data.slice(0, 4)); // atualiza o estado com os primeiros 4 itens
 
-        // Fetch Brancos
+        // busca os dados de vinhos brancos
         const brancosResponse = await axios.get(
           "/api/products?category=wine&type=Branco"
         );
-        setBrancos(brancosResponse.data.slice(0, 4));
+        setBrancos(brancosResponse.data.slice(0, 4)); // atualiza o estado com os primeiros 4 itens
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error); // loga qualquer erro ocorrido nas requisições
       }
     };
 
-    fetchData();
-  }, []);
+    fetchData(); // chama a função de busca ao montar o componente
+  }, []); // dependências vazias garantem que essa lógica só roda uma vez na montagem
+
 
   return (
     <div className="home-page">

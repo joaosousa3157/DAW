@@ -1,143 +1,144 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useUser } from "../context/UserContext"; // Certifique-se de usar o contexto de usuário
-import { useCheckout } from "../context/CheckoutContext"; // Contexto para o carrinho
+import { useUser } from "../context/UserContext";
+import { useCheckout } from "../context/CheckoutContext";
 import "../css/wineDetailPage.css";
 
-// Interface para o formato do vinho
+// interface para o formato do vinho
 interface Wine {
-  _id: string;
-  image: string;
-  name: string;
-  price: number;
-  rating: number;
-  region: string;
-  type: string;
-  year: number;
-  description: string;
-  vol: number; // Teor alcoólico
-  capacity: number; // Capacidade
+  _id: string; // id do vinho
+  image: string; // imagem do vinho
+  name: string; // nome do vinho
+  price: number; // preco do vinho
+  rating: number; // avaliacao media
+  region: string; // regiao de origem
+  type: string; // tipo do vinho (tinto, branco, etc.)
+  year: number; // ano de producao
+  description: string; // descricao do vinho
+  vol: number; // teor alcoolico
+  capacity: number; // capacidade da garrafa
 }
 
-// Interface para o formato de uma review
+// interface para o formato de uma review
 interface Review {
-  userID: string;
-  wineID: string;
-  rating: number;
-  comment: string;
-  dateTime: string;
+  userID: string; // id do usuario que fez a review
+  wineID: string; // id do vinho avaliado
+  rating: number; // nota da review
+  comment: string; // comentario da review
+  dateTime: string; // data e hora da review
 }
 
 const WineDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Captura o ID do vinho da URL
-  const { user } = useUser(); // Pega o usuário logado do contexto
-  const { addToCheckout } = useCheckout(); // Função para adicionar ao carrinho
-  const [wine, setWine] = useState<Wine | null>(null); // Estado para os detalhes do vinho
-  const [reviews, setReviews] = useState<Review[]>([]); // Estado para as reviews
-  const [newReview, setNewReview] = useState({ rating: 0, comment: "" }); // Estado para review nova
-  const [errorMessage, setErrorMessage] = useState(""); // Estado para erros
-  const [isLoading, setIsLoading] = useState(true); // Estado para carregamento
+  const { id } = useParams<{ id: string }>(); // pega o id do vinho da url
+  const { user } = useUser(); // pega o usuario logado do contexto
+  const { addToCheckout } = useCheckout(); // funcao pra adicionar ao carrinho
+  const [wine, setWine] = useState<Wine | null>(null); // estado pros detalhes do vinho
+  const [reviews, setReviews] = useState<Review[]>([]); // estado pras reviews
+  const [newReview, setNewReview] = useState({ rating: 0, comment: "" }); // estado pra nova review
+  const [errorMessage, setErrorMessage] = useState(""); // estado pra mensagens de erro
+  const [isLoading, setIsLoading] = useState(true); // estado pra carregamento
 
-  // Fetch dos detalhes do vinho e reviews
+  // busca os detalhes do vinho e as reviews
   useEffect(() => {
     if (!id) {
-      setErrorMessage("ID inválido ou não encontrado.");
+      setErrorMessage("id invalido ou nao encontrado."); // se o id nao e valido
       return;
     }
 
     const fetchWineDetails = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // ativa o loading
       try {
-        const response = await fetch(`/api/products/${id}`);
-        if (!response.ok) throw new Error("Erro ao buscar os detalhes do vinho.");
+        const response = await fetch(`/api/products/${id}`); // busca detalhes do vinho
+        if (!response.ok) throw new Error("erro ao buscar os detalhes do vinho.");
         const data = await response.json();
-        setWine(data);
+        setWine(data); // salva os detalhes do vinho
       } catch (error) {
-        console.error("Erro ao carregar os detalhes do vinho:", error);
-        setErrorMessage("Erro ao carregar os detalhes do vinho.");
+        console.error("erro ao carregar os detalhes do vinho:", error);
+        setErrorMessage("erro ao carregar os detalhes do vinho.");
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // desativa o loading
       }
     };
 
     const fetchWineReviews = async () => {
       try {
-          const response = await fetch(`/api/reviews?wineID=${id}`);
-          if (!response.ok) throw new Error("Erro ao buscar reviews.");
-          const data = await response.json();
-          setReviews(data);
+        const response = await fetch(`/api/reviews?wineID=${id}`); // busca as reviews
+        if (!response.ok) throw new Error("erro ao buscar reviews.");
+        const data = await response.json();
+        setReviews(data); // salva as reviews
       } catch (error) {
-          console.error("Erro ao carregar reviews:", error);
-          setErrorMessage("Erro ao carregar as reviews.");
+        console.error("erro ao carregar reviews:", error);
+        setErrorMessage("erro ao carregar as reviews.");
       }
-  };
+    };
 
-    fetchWineDetails();
-    fetchWineReviews();
-  }, [id]);
+    fetchWineDetails(); // busca os detalhes do vinho
+    fetchWineReviews(); // busca as reviews
+  }, [id]); // roda sempre que o id mudar
 
-  // Enviar nova review
+  // envia uma nova review
   const handleReviewSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // previne reload da pagina
 
     if (!user) {
-      alert("Você precisa estar logado para enviar uma review.");
+      alert("precisas de estar logado para enviar uma review.");
       return;
     }
 
     if (newReview.rating < 1 || newReview.rating > 5) {
-      setErrorMessage("A nota deve ser entre 1 e 5.");
+      setErrorMessage("a nota deve ser entre 1 e 5.");
       return;
     }
 
     if (!newReview.comment.trim()) {
-      setErrorMessage("O comentário não pode estar vazio.");
+      setErrorMessage("o comentario nao pode estar vazio.");
       return;
     }
 
     const reviewData = {
-      userID: user.id, // Pega o ID do usuário logado
-      wineID: id, // ID do vinho
-      rating: newReview.rating, // Nota
-      comment: newReview.comment.trim(), // Comentário
+      userID: user.id, // id do usuario logado
+      wineID: id, // id do vinho
+      rating: newReview.rating, // nota
+      comment: newReview.comment.trim(), // comentario
     };
 
-    console.log("Enviando dados da review:", reviewData); // Log para debug
+    console.log("enviando dados da review:", reviewData); // log pra debug
 
     try {
       const response = await fetch("/api/reviews", {
-        method: "POST",
+        method: "POST", // metodo pra enviar a review
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", // conteudo json
         },
-        body: JSON.stringify(reviewData),
+        body: JSON.stringify(reviewData), // corpo da requisicao com os dados da review
       });
 
       if (response.ok) {
-        const newReviewData = await response.json();
-        setReviews((prev) => [...prev, newReviewData]); // Adiciona a nova review
-        setNewReview({ rating: 0, comment: "" }); // Limpa os campos
-        setErrorMessage("");
+        const newReviewData = await response.json(); // pega a nova review
+        setReviews((prev) => [...prev, newReviewData]); // adiciona a nova review
+        setNewReview({ rating: 0, comment: "" }); // limpa os campos
+        setErrorMessage(""); // reseta erros
       } else {
-        const errorData = await response.json();
-        console.error("Erro ao enviar review:", errorData);
-        setErrorMessage(errorData.error || "Erro ao enviar review.");
+        const errorData = await response.json(); // pega o erro
+        console.error("erro ao enviar review:", errorData);
+        setErrorMessage(errorData.error || "erro ao enviar review.");
       }
     } catch (err) {
-      console.error("Erro ao enviar review:", err);
-      setErrorMessage("Ocorreu um erro ao enviar a review.");
+      console.error("erro ao enviar review:", err); // log do erro
+      setErrorMessage("ocorreu um erro ao enviar a review."); // mensagem de erro
     }
   };
 
+  // adiciona o vinho ao carrinho
   const handleAddToCart = () => {
-    if (!wine) return;
+    if (!wine) return; // se nao tem vinho, nao faz nada
 
     addToCheckout({
-      id: wine._id,
-      name: wine.name,
-      price: wine.price,
-      quantity: 1,
-      img: wine.image,
+      id: wine._id, // id do vinho
+      name: wine.name, // nome do vinho
+      price: wine.price, // preco do vinho
+      quantity: 1, // quantidade inicial
+      img: wine.image, // imagem do vinho
     });
   };
 

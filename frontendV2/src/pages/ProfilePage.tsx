@@ -3,107 +3,109 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "../css/profilePage.css";
 
+// interface para os pedidos
 interface Order {
-  _id: string;
-  dateOfPurchase: string;
-  total: number;
+  _id: string; // id do pedido
+  dateOfPurchase: string; // data da compra
+  total: number; // total da compra
 }
 
+// componente para a pagina de perfil
 const ProfilePage: React.FC = () => {
-  const { user, logout, login } = useUser();
-  const navigate = useNavigate();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [username, setUsername] = useState(user?.username || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const { user, logout, login } = useUser(); // obtem informacoes do usuario e metodos do contexto
+  const navigate = useNavigate(); // usado para redirecionar
+  const [orders, setOrders] = useState<Order[]>([]); // estado para armazenar pedidos
+  const [isLoading, setIsLoading] = useState(true); // flag para indicar se os pedidos estao a carregar
+  const [username, setUsername] = useState(user?.username || ""); // estado para o nome do usuario
+  const [email, setEmail] = useState(user?.email || ""); // estado para o email do usuario
+  const [successMessage, setSuccessMessage] = useState(""); // mensagem de sucesso
+  const [errorMessage, setErrorMessage] = useState(""); // mensagem de erro
 
-  // Redireciona para login se o usuário não estiver logado
+  // verifica se o usuario esta logado, se nao redireciona para login
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      navigate("/login"); // manda o usuario para a pagina de login
     }
-  }, [user, navigate]);
+  }, [user, navigate]); // roda sempre que o user ou navigate mudam
 
-  // Carrega os pedidos do usuário
+  // carrega os pedidos do usuario
   useEffect(() => {
-    if (!user) return;
+    if (!user) return; // se nao tem usuario, nao faz nada
 
-    fetch(`/api/orders?userID=${user.id}`)
-      .then((response) => response.json())
+    fetch(`/api/orders?userID=${user.id}`) // busca os pedidos do usuario pelo id
+      .then((response) => response.json()) // converte a resposta para json
       .then((data) => {
-        setOrders(data);
-        setIsLoading(false);
+        setOrders(data); // guarda os pedidos no estado
+        setIsLoading(false); // para o loading
       })
       .catch((error) => {
-        console.error("Erro ao carregar pedidos:", error);
-        setIsLoading(false);
+        console.error("Erro ao carregar pedidos:", error); // log do erro
+        setIsLoading(false); // para o loading mesmo com erro
       });
-  }, [user]);
+  }, [user]); // roda sempre que o usuario mudar
 
-  // Atualiza as informações do usuário
+  // atualiza as informacoes do usuario
   const handleUpdate = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault(); // evita o reload da pagina
 
     if (!user) {
-      setErrorMessage("Você precisa estar logado para atualizar as informações.");
+      setErrorMessage("Precisas de estar logado para atualizar informacoes.");
       return;
     }
 
     try {
       const response = await fetch(`/api/users/${user.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email }),
+        method: "PUT", // faz um update
+        headers: { "Content-Type": "application/json" }, // diz que o conteudo e json
+        body: JSON.stringify({ username, email }), // manda o nome e o email
       });
 
       if (response.ok) {
-        const updatedUser = await response.json();
-        setSuccessMessage("Informações atualizadas com sucesso!");
+        const updatedUser = await response.json(); // pega o usuario atualizado
+        setSuccessMessage("Informacoes atualizadas com sucesso!");
         setErrorMessage("");
 
-        // Atualiza o contexto do usuário
+        // atualiza o contexto do usuario com os novos dados
         login({
           id: updatedUser._id,
           email: updatedUser.email,
           username: updatedUser.username,
         });
       } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || "Erro ao atualizar informações.");
+        const errorData = await response.json(); // pega o erro retornado
+        setErrorMessage(errorData.error || "Erro ao atualizar informacoes.");
         setSuccessMessage("");
       }
     } catch (error) {
-      console.error("Erro ao atualizar informações:", error);
-      setErrorMessage("Ocorreu um erro. Tente novamente.");
+      console.error("Erro ao atualizar informacoes:", error); // log do erro
+      setErrorMessage("Ocorreu um erro. Tenta novamente."); // mensagem de erro
       setSuccessMessage("");
     }
   };
 
-  // Exclui a conta do usuário
+  // apaga a conta do usuario
   const handleDeleteAccount = async () => {
     if (!user) return;
 
     try {
       const response = await fetch(`/api/users/${user.id}`, {
-        method: "DELETE",
+        method: "DELETE", // deleta a conta
       });
 
       if (response.ok) {
-        alert("Conta excluída com sucesso.");
-        logout();
-        navigate("/");
+        alert("Conta apagada com sucesso."); // mensagem de sucesso
+        logout(); // desloga o usuario
+        navigate("/"); // redireciona para a pagina inicial
       } else {
-        alert("Erro ao excluir conta.");
+        alert("Erro ao apagar conta."); // mensagem de erro
       }
     } catch (error) {
-      console.error("Erro ao excluir conta:", error);
+      console.error("Erro ao apagar conta:", error); // log do erro
     }
   };
 
   if (!user) {
-    return null;
+    return null; // nao mostra nada se nao tiver usuario
   }
 
   return (
