@@ -3,6 +3,7 @@ import { userDB } from '../dbInstances';
 // estrutura do utilizador
 export interface User 
 {
+    _id: string;
     username: string; // nome de utilizador
     email: string; // email do utilizador
     password: string; // password do utilizador
@@ -44,16 +45,17 @@ export default class userdbWorker {
 
     public updateUser(id: string, updatedUser: Partial<User>): Promise<number> {
         return new Promise((resolve, reject) => {
-          this.db.update(
-            { _id: id }, // Filtra pelo _id correto
-            { $set: updatedUser }, // Atualiza apenas os campos necessários
-            {},
-            (err: Error | null, numUpdated: number) => {
-              err ? reject(err) : resolve(numUpdated); // Resolve com o número de documentos atualizados
-            }
-          );
+            this.db.update(
+                { _id: id }, // Filtrar pelo ID
+                { $set: updatedUser }, // Atualizar os campos fornecidos
+                {},
+                (err: Error | null, numUpdated: number) => {
+                    err ? reject(err) : resolve(numUpdated);
+                }
+            );
         });
-      }
+    }
+    
       
     
 
@@ -75,4 +77,25 @@ export default class userdbWorker {
             });
         });
     }
+    public async updateUserWithValidation(id: string, updatedUser: Partial<User>): Promise<User | null> {
+        // Certifica-se de que o email não está em uso por outro usuário
+        if (updatedUser.email) {
+          const existingUser = await this.getUserByEmail(updatedUser.email);
+          if (existingUser && existingUser._id !== id) {
+            throw new Error("O email já está em uso por outro usuário.");
+          }
+        }
+      
+        // Atualiza o usuário
+        await this.updateUser(id, updatedUser);
+      
+        // Retorna o usuário atualizado
+        return this.getUserById(id);
+      }
+
+    
+    
+    
+      
+      
 }

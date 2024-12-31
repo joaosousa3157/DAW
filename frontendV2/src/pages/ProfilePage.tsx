@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
-import { useNavigate } from "react-router-dom"; // Para redirecionar
+import { useNavigate } from "react-router-dom";
 import "../css/profilePage.css";
 
 interface Order {
@@ -9,37 +9,39 @@ interface Order {
 }
 
 const ProfilePage: React.FC = () => {
-  const { user, logout, login } = useUser(); // Adiciona login ao contexto
-  const navigate = useNavigate(); // Para redirecionar
-  const [orders, setOrders] = useState<Order[]>([]); // Guarda pedidos
-  const [isLoading, setIsLoading] = useState(true); // Flag pra loading
-  const [username, setUsername] = useState(user?.username || ""); // Estado para o username
+  const { user, logout, login } = useUser();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [username, setUsername] = useState(user?.username || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   // Redireciona para login se o usuário não estiver logado
   useEffect(() => {
     if (!user) {
-      navigate("/login"); // Redireciona para a página de login
+      navigate("/login");
     }
   }, [user, navigate]);
 
+  // Carrega os pedidos do usuário
   useEffect(() => {
-    if (!user) return; // Se não tem user, não faz nada
+    if (!user) return;
 
-    // Busca os pedidos do user
-    fetch(`/api/orders?userID=${user.email}`) // Usa o email pra buscar
-      .then((response) => response.json()) // Pega resposta como JSON
+    fetch(`/api/orders?userID=${user.id}`)
+      .then((response) => response.json())
       .then((data) => {
-        setOrders(data); // Salva os pedidos
-        setIsLoading(false); // Para o loading
+        setOrders(data);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao carregar pedidos:", error); // Log do erro
-        setIsLoading(false); // Para o loading mesmo com erro
+        console.error("Erro ao carregar pedidos:", error);
+        setIsLoading(false);
       });
-  }, [user]); // Roda quando o user muda
+  }, [user]);
 
+  // Atualiza as informações do usuário
   const handleUpdate = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -52,22 +54,16 @@ const ProfilePage: React.FC = () => {
       const response = await fetch(`/api/users/${user.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ username, email }),
       });
 
       if (response.ok) {
-        const updatedUser = await response.json(); // Usuário atualizado do backend
-        console.log("Usuário atualizado do backend:", updatedUser); // Log do backend
-        setSuccessMessage("Nome de usuário atualizado com sucesso!");
+        const updatedUser = await response.json();
+        setSuccessMessage("Informações atualizadas com sucesso!");
         setErrorMessage("");
 
-        // Atualiza todo o contexto com os dados recebidos
+        // Atualiza o contexto do usuário
         login({
-          id: updatedUser._id,
-          email: updatedUser.email,
-          username: updatedUser.username,
-        });
-        console.log("Contexto atualizado:", {
           id: updatedUser._id,
           email: updatedUser.email,
           username: updatedUser.username,
@@ -84,6 +80,7 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  // Exclui a conta do usuário
   const handleDeleteAccount = async () => {
     if (!user) return;
 
@@ -94,8 +91,8 @@ const ProfilePage: React.FC = () => {
 
       if (response.ok) {
         alert("Conta excluída com sucesso.");
-        logout(); // Desloga o usuário
-        navigate("/"); // Redireciona para a página inicial
+        logout();
+        navigate("/");
       } else {
         alert("Erro ao excluir conta.");
       }
@@ -105,7 +102,7 @@ const ProfilePage: React.FC = () => {
   };
 
   if (!user) {
-    return null; // Evita exibir conteúdo antes do redirecionamento
+    return null;
   }
 
   return (
@@ -124,9 +121,9 @@ const ProfilePage: React.FC = () => {
               type="text"
               id="name"
               name="name"
-              placeholder="joao silva" // Exemplo de nome
-              value={username} // Pega o username do estado
-              onChange={(e) => setUsername(e.target.value)} // Atualiza o estado
+              placeholder="joao silva"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -135,9 +132,9 @@ const ProfilePage: React.FC = () => {
               type="email"
               id="email"
               name="email"
-              placeholder="joao@email.com" // Placeholder generico
-              value={user.email} // Mostra o email do user
-              readOnly // Não deixa editar
+              placeholder="joao@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           {successMessage && <p className="success-message">{successMessage}</p>}
