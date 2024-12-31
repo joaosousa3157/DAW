@@ -1,152 +1,75 @@
 .home-page {
-  font-family: Arial, sans-serif;
-  color: #333;
-}
-
-/* Hero Section */
-.hero-section {
-  text-align: center;
-  background-color: #462b38;
-  color: #fff;
-  padding: 50px 20px;
-}
-
-.hero-section h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-.hero-section p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-}
-
-.explore-button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #5b3748;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.explore-button:hover {
-  background-color: #744857;
-}
-
-/* Promoções */
-.promotions {
-  padding: 40px 20px;
-  background-color: #f8f8f8;
-}
-
-.promotions h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.promotion-container {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.promotion-card {
-  width: 200px;
-  text-align: center;
-}
-
-.promotion-card img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.promotion-card p {
-  font-size: 1rem;
-  color: #555;
-}
-
-/* Lista de Vinhos */
-.wine-list {
-  padding: 40px 20px;
-}
-
-.wine-list h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.wine-card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
-
-/* Login Section */
-.welcome-message {
-  text-align: center;
-  margin: 20px 0;
-  background-color: #f0f0f0;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.welcome-message p {
-  font-size: 1.1rem;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.logout-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 1rem;
-  background-color: #c62828;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.logout-button:hover {
-  background-color: #a91f1f;
-}
-
-/* Login prompt for guests */
-.login-prompt {
-  text-align: center;
-  margin: 20px 0;
-  background-color: #ffe9e9;
-  padding: 15px;
-  border: 1px solid #ffcccc;
-  border-radius: 8px;
-}
-
-.login-prompt p {
-  font-size: 1.1rem;
-  color: #b71c1c;
-  margin-bottom: 10px;
-}
-
-.login-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 1rem;
-  background-color: #5b3748;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background-color: #744857;
-}
+    color: #333;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .banner {
+    text-align: center;
+    background-color: #462b38;
+    color: #fff;
+    padding: 60px 20px;
+  }
+  
+  .banner h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .banner p {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+  }
+  
+  .explore-button {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 1rem;
+    background-color: #5b3748;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .explore-button:hover {
+    background-color: #744857;
+  }
+  
+  .sections {
+    padding: 40px 20px;
+  }
+  
+  .sections h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #462b38;
+  }
+  
+  .wine-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .packs-section .wine-card-container {
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .tintos-section .wine-card-container {
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .brancos-section .wine-card-container {
+    border-radius: 8px;
+    padding: 20px;
+  }

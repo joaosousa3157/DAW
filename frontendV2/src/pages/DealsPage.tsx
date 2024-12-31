@@ -1,32 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/dealsPage.css";
 import WineCard from "../components/WineCard";
+import axios from "axios";
 
 const DealsPage: React.FC = () => {
-  // Dados fictícios para exibir os produtos em promoção
-  const deals = [
-    {
-      id: "1",
-      image: "https://via.placeholder.com/300",
-      name: "Wine A - 50% Off",
-      price: 25,
-      rating: 4.5,
-    },
-    {
-      id: "2",
-      image: "https://via.placeholder.com/300",
-      name: "Wine B - Buy 1 Get 1 Free",
-      price: 30,
-      rating: 4.8,
-    },
-    {
-      id: "3",
-      image: "https://via.placeholder.com/300",
-      name: "Wine C - 30% Off",
-      price: 20,
-      rating: 4.3,
-    },
-  ];
+  const [deals, setDeals] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchDeals = async () => {
+      try {
+        const response = await axios.get("/api/products?category=packs");
+        setDeals(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar os packs:", error);
+      }
+    };
+
+    fetchDeals();
+  }, []);
 
   return (
     <div className="deals-page">
@@ -38,8 +29,8 @@ const DealsPage: React.FC = () => {
         <div className="deals-grid">
           {deals.map((deal) => (
             <WineCard
-              key={deal.id}
-              id={deal.id}
+              key={deal._id}
+              id={deal._id}
               image={deal.image}
               name={deal.name}
               price={deal.price}

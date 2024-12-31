@@ -33,10 +33,8 @@ router.get('/', async (req, res) => {
 // rota para obter vinho pelo id
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    console.log("ID recebido:", id); // Log do ID recebido
     try {
         const wine = await productsWorker.getProductById(id);
-        console.log("Vinho encontrado:", wine); // Log do vinho encontrado
         if (wine) {
             res.status(200).json(wine);
         } else {

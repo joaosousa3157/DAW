@@ -1,7 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-
 import logo from "../images/logo.png";
 import UserIcon from "../images/user.svg";
 import CartIcon from "../images/cart.svg";
@@ -20,7 +18,7 @@ const NavBar: React.FC = () => {
 
       <ul className="nav-item nav-links">
         <li><Link to='wines'>Vinhos</Link></li>
-        <li><Link to='deals'>Promoções</Link></li>
+        <li><Link to='deals'>Packs</Link></li>
         <li><Link to='misc'>Acessórios</Link></li>
         <li><Link to='about'>Sobre Nós</Link></li>
       </ul>
