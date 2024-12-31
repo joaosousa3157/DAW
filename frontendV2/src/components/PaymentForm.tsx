@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useCheckout } from "../context/CheckoutContext"; // Importando o contexto
+import { useCheckout } from "../context/CheckoutContext"; // Importando o contexto do carrinho
+import { useUser } from "../context/UserContext"; // Importando o contexto do usuário
 
 interface PaymentFormProps {
   onBackToCart: () => void;
@@ -8,6 +9,7 @@ interface PaymentFormProps {
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
   const { checkoutItems } = useCheckout(); // Acessando os itens do carrinho do contexto
+  const { user } = useUser(); // Acessando o usuário logado do contexto
   const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -74,11 +76,19 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     // Limpar erros caso o formulário seja válido
     setFormErrors([]);
 
+    // Verificando se o usuário está logado
+    if (!user || !user.id) {
+      setPaymentStatus("error");
+      console.error("Usuário não está logado!");
+      return;
+    }
+
     // Prepare data to send in the POST request
     const dataToSend = {
       ...formData,
       billingAddress: useShippingAsBilling ? formData.shippingAddress : formData.billingAddress,
       cartItems: checkoutItems, // Adiciona os itens do carrinho ao corpo da requisição
+      userID: user.id, // Inclui o ID do usuário logado
     };
 
     try {

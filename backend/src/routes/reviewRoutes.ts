@@ -50,8 +50,11 @@ router.post('/', async (req, res): Promise<void> => {
         const orders = await orderWorker.filterOrders({ userID });
         console.log("Pedidos encontrados para o usuário:", orders);
 
-        const purchasedWine = orders.some(order => Array.isArray(order.wineIDs) && order.wineIDs.includes(wineID));
-        // verifica se vinho esta nos pedidos
+        // Itera sobre os pedidos e verifica se o vinho está nos `cartItems`
+        const purchasedWine = orders.some(order =>
+            order.cartItems.some((item: any) => item.id === wineID)
+        );
+
         console.log(`O vinho ${wineID} foi comprado?`, purchasedWine);
 
         if (!purchasedWine) {
@@ -65,9 +68,11 @@ router.post('/', async (req, res): Promise<void> => {
         const newReview = await reviewWorker.insertReview({ userID, wineID, rating, comment, dateTime: now });
         res.status(201).json(newReview); // responde com a nova review
     } catch (error) {
-        handleError(res, error);
+        console.error("Erro ao processar review:", error);
+        res.status(500).json({ error: "An unexpected error occurred while processing your review." });
     }
 });
+
 
 // rota para deletar review por id
 router.delete('/:id', async (req, res): Promise<void> => {
