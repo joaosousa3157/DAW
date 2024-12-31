@@ -1,8 +1,0 @@
-[
-    {
-        "userID": 1,
-        "wineIDs" : ["1", "2", "3"],
-        "dateOfPurchase": "02/01/2025",
-        "userEmail" : "a81007@ualg.pt"
-    }
-]
