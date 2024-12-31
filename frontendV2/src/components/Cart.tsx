@@ -25,7 +25,6 @@ const Cart: React.FC<CartProps> = ({ onProceedToPayment }) => {
                 <div className="details">
                   <h3>{item.name}</h3>
                   <p>Preço: €{item.price.toFixed(2)}</p>
-                  {/* <p>Subtotal: €{(item.price * item.quantity).toFixed(2)}</p> */}
                 </div>
 
                 <div className="update-and-remove">

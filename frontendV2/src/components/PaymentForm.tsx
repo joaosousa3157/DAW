@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useCheckout } from "../context/CheckoutContext"; // Importando o contexto do carrinho
-import { useUser } from "../context/UserContext"; // Importando o contexto do usuário
+import { useCheckout } from "../context/CheckoutContext";
+import { useUser } from "../context/UserContext";
 
 interface PaymentFormProps {
   onBackToCart: () => void;
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
-  const { checkoutItems, clearCheckout } = useCheckout(); // Inclui a função clearCheckout
-  const { user } = useUser(); // Acessando o usuário logado do contexto
+  const { checkoutItems, clearCheckout } = useCheckout();
+  const { user } = useUser();
   const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -38,6 +38,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
       [name]: value,
     }));
   };
+
+  const calculateTotal = () =>
+    checkoutItems.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
+
+  const total = calculateTotal();
+  const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
 
   const validateForm = () => {
     const errors: string[] = [];
@@ -81,6 +90,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
         : formData.billingAddress,
       cartItems: checkoutItems,
       userID: user.id,
+      total: total,
+      dateOfPurchase: now
     };
 
     try {
@@ -178,7 +189,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="shipping-address">Endereço de Entrega</label>
+          <label htmlFor="shipping-address">Morada de Entrega</label>
           <textarea
             id="shipping-address"
             name="shippingAddress"
@@ -203,7 +214,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
 
         <div className="form-group">
           <label htmlFor="use-shipping-as-billing">
-            Utilizar o endereço de envio como endereço de faturação
+            Utilizar a morada de envio como morada de faturação
           </label>
           <input
             type="checkbox"
@@ -216,7 +227,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
 
         {!useShippingAsBilling && (
           <div className="form-group">
-            <label htmlFor="billing-address">Endereço de Faturação</label>
+            <label htmlFor="billing-address">Morada de Faturação</label>
             <textarea
               id="billing-address"
               name="billingAddress"

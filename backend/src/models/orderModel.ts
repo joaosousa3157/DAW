@@ -18,16 +18,12 @@ export interface Order {
     shippingAddress: string; // endereco de entrega
     shippingPhone: string; // telefone de entrega
     billingAddress: string; // endereco de cobranca
-    cardName: string; // nome no cartao
-    cardNumber: string; // numero do cartao
-    expiryDate: string; // validade do cartao
-    cvv: string; // cvv do cartao
     paymentMethod: string; // metodo de pagamento
-    discountCode?: string; // codigo de desconto (opcional)
     cartItems: CartItem[]; // itens no carrinho
     dateOfPurchase: Date; // data da compra
     userEmail: string; // email do usuario
-    _id?: string; // id do pedido (opcional, gerado pelo banco)
+    _id?: string,
+    total: number,
 }
 
 // classe pra mexer no banco de pedidos

@@ -1,10 +1,21 @@
 import express, { Router } from 'express';
 import orderDBWorker from '../models/orderModel';
+import userdbWorker from '../models/userModel';
+import productsdbWorker from 'models/productModel';
 import nodemailer from 'nodemailer';
-import { productDB } from '../dbInstances';
+import { productDB, userDB } from '../dbInstances';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+const mailUser = process.env.MAILUSER;
+const mailPASS = process.env.MAILPASS
+
 
 const router: Router = express.Router();
 const orderWorker: orderDBWorker = new orderDBWorker();
+const userWorker: userdbWorker = new userdbWorker();
+
+
 
 // trata erros e devolve resposta com status 500
 const handleError = (res: express.Response, error: unknown) => {
@@ -28,7 +39,6 @@ router.get('/', async (req, res) => {
         else 
         {
             // filtra pedidos com base nos parametros da query
-            console.log(req.query)
             const wines = await orderWorker.filterOrders(req.query);
 
             res.status(200).json(wines);
@@ -47,36 +57,27 @@ const transporter = nodemailer.createTransport({
     port: 587,                 
     secure: false,           
     auth: {
-        user: '@ualg.pt', // email da uni
-        pass: '',       // senha
+        user: mailUser, // email da uni
+        pass: mailPASS,       // senha
     }
 });
 
 // funcao para enviar confirmacao de pedido por email
 const sendOrderConfirmationEmail = async (email: string, order: any) => {
-    try {
-        // obtem detalhes dos vinhos no pedido
-        const wineDetails = await Promise.all(order.wineIDs.map((wineID: string) => {
-            return new Promise((resolve, reject) => {
-                productDB.findOne({ id: parseInt(wineID) }, (err: Error | null, wine: any) => {
-                    if (err) reject(err);
-                    else resolve(wine);
-                });
-            });
-        }));
 
-        // formata os vinhos para enviar no email
-        const formattedWines = wineDetails
-            .filter((wine: any) => wine !== null)
-            .map((wine: any) => `- ${wine.name} (${wine.type})`)
-            .join('\n');
+    
+    try {
+
+        const formattedWines = order.cartItems.map((wine: any) => {
+            return `Nome: ${wine.name}, Preço: ${wine.price}, Quantidade: ${wine.quantity}\n`;
+        }).join('');
 
         // pega data e hora atual formatada
         const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
 
         // cria configuracao do email
         const mailOptions = {
-            from: '@ualg.pt', // email da uni
+            from: mailUser, // email da uni
             to: email,
             subject: 'Confirmação de Compra',
             text: `Obrigado pela sua compra!\n\nDetalhes do pedido:\n${formattedWines}\n\nHora da compra: ${now}\n\nAgradecemos pela preferência!`,
@@ -84,7 +85,6 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
 
         // envia o email
         await transporter.sendMail(mailOptions);
-        console.log('E-mail de confirmação enviado com sucesso!');
     } catch (error) {
         console.error('Erro ao enviar e-mail:', error);
     }
@@ -94,14 +94,15 @@ const sendOrderConfirmationEmail = async (email: string, order: any) => {
 router.post('/', async (req, res) => {
     
     const newOrder = req.body;
-
     try 
     {
         // insere o pedido na base de dados
         const createdOrder = await orderWorker.insertOrder(newOrder);
 
+        const user = await userWorker.getUserById(createdOrder.userID);
+
         // envia email de confirmacao se email do usuario existir
-        const userEmail = newOrder.userEmail;
+        const userEmail = user?.email
         if (userEmail) {
             sendOrderConfirmationEmail(userEmail, createdOrder);
         }

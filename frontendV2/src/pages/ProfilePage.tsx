@@ -6,6 +6,7 @@ import "../css/profilePage.css";
 interface Order {
   _id: string;
   dateOfPurchase: string;
+  total: number;
 }
 
 const ProfilePage: React.FC = () => {
@@ -153,7 +154,9 @@ const ProfilePage: React.FC = () => {
           <ul>
             {orders.map((order) => (
               <li key={order._id}>
-                <span>Pedido #{order._id}</span> - {order.dateOfPurchase}
+                <span>Pedido #{order._id}</span>
+                <span>{order.dateOfPurchase}</span>
+                <span>{order.total} €</span>
               </li>
             ))}
           </ul>

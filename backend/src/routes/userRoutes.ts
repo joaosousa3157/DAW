@@ -2,6 +2,11 @@ import express, { Router } from 'express';
 import userdbWorker from '../models/userModel';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+const mailUser = process.env.MAILUSER;
+const mailPASS = process.env.MAILPASS
 
 const router: Router = express.Router();
 const userWorker: userdbWorker = new userdbWorker();
@@ -11,7 +16,7 @@ const handleError = (res: express.Response, error: unknown) => {
     if (error instanceof Error) {
         res.status(500).json({ error: error.message });
     } else {
-        res.status(500).json({ error: "An unknown error occurred" });
+        res.status(500).json({ error: "Um erro desconhecido ocorreu" });
     }
 };
 
@@ -21,8 +26,8 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // usa TLS
     auth: {
-        user: 'a81457@ualg.pt', // email de envio
-        pass: '', // senha do email
+        user: mailUser, // email de envio
+        pass: mailPASS, // senha do email
     },
 });
 
@@ -30,7 +35,7 @@ const transporter = nodemailer.createTransport({
 const sendWelcomeEmail = async (email: string, username: string) => {
     try {
         const mailOptions = {
-            from: 'a81457@ualg.pt', // email que envia
+            from: mailUser, // email que envia
             to: email, // destinatario
             subject: 'Bem-vindo ao Otis Wines!',
             text: `Olá ${username},\n\nObrigado por se registrar no Otis Wines! Estamos felizes em tê-lo conosco.\n\nExplore nossas opções de vinhos e aproveite!\n\nAtenciosamente,\nEquipe Otis Wines`,
@@ -80,9 +85,9 @@ router.delete('/:id', async (req, res) => {
         const deletedCount = await userWorker.deleteUser(userID);
 
         if (deletedCount > 0) {
-            res.status(200).json({ message: `Wine with ID ${userID} deleted successfully` });
+            res.status(200).json({ message: `User com ID ${userID} apagado com sucesso` });
         } else {
-            res.status(404).json({ message: `Wine with ID ${userID} not found` });
+            res.status(404).json({ message: `User com ID ${userID} não encontrado` });
         }
     } catch (error) {
         handleError(res, error);
@@ -95,7 +100,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     // valida os campos obrigatorios
     if (!email || !password) {
-        res.status(400).json({ error: 'Email and password are required.' });
+        res.status(400).json({ error: 'Email e password obrigatórios.' });
         return;
     }
 
@@ -114,13 +119,13 @@ router.post('/login', async (req: Request, res: Response) => {
 
         // verifica as credenciais
         if (user && user.password === password) {
-            res.status(200).json({ message: 'Login successful', user });
+            res.status(200).json({ message: 'Login bem sucedido', user });
             console.log("Dados recebidos no login:", req.body);
         } else {
-            res.status(401).json({ error: 'Invalid email or password.' });
+            res.status(401).json({ error: 'Email ou password invalido.' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'An internal error occurred.' });
+        res.status(500).json({ error: 'Um erro interno ocorreu.' });
     }
 });
 
@@ -140,16 +145,16 @@ router.put('/:id', async (req, res) => {
         if (updatedUser) {
             res.status(200).json(updatedUser); 
         } else {
-            res.status(404).json({ error: 'Usuário não encontrado.' }); 
+            res.status(404).json({ error: 'Utilizador não encontrado.' }); 
         }
     } catch (error) {
-        console.error('Erro ao atualizar usuário:', error);
+        console.error('Erro ao atualizar utilizador:', error);
 
         
         if (error instanceof Error) {
             res.status(400).json({ error: error.message }); 
         } else {
-            res.status(500).json({ error: 'Erro interno ao atualizar usuário.' }); 
+            res.status(500).json({ error: 'Erro interno ao atualizar utilizador.' }); 
         }
     }
 });
