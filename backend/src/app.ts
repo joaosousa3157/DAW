@@ -26,7 +26,7 @@ const initializeProducts = async () => {
         const products = await productWorker.getAllproducts(); // verifica se já existem produtos
 
         if (products.length === 0) { // se não tem produtos, carrega o wines.json
-            console.log('Banco de dados vazio. Carregando produtos do wines.json...');
+            console.log('Base de dados vazia. A inserir produtos do wines.json...');
             
             const winesData = JSON.parse(
                 fs.readFileSync(path.join(__dirname, '../wines.json'), 'utf8')
@@ -36,9 +36,9 @@ const initializeProducts = async () => {
                 await productWorker.insertProduct(product); // insere produtos no banco
             }
 
-            console.log('Produtos carregados com sucesso.');
+            console.log('Produtos inserirdos com sucesso.');
         } else {
-            console.log('Banco de dados de produtos já contém dados.');
+            console.log('Base de dados de produtos já contém dados.');
         }
     } catch (error) {
         console.error('Erro ao inicializar os produtos:', error);
