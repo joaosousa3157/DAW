@@ -19,18 +19,20 @@ const handleError = (res: express.Response, error: unknown): void => {
 
 // rota para obter todas as reviews
 router.get('/', async (req, res): Promise<void> => {
-    const { wineID } = req.query;
+    const { wineID } = req.query; // pega o parametro opcional wineID da query
 
     try {
-        let reviews;
+        let reviews; // variavel para armazenar as reviews
         if (wineID) {
-            reviews = await reviewWorker.getReviewsByWineID(wineID as string);
+            // se o wineID foi fornecido
+            reviews = await reviewWorker.getReviewsByWineID(wineID as string); // busca reviews especificas para o wineID
         } else {
-            reviews = await reviewWorker.getAllReviews();
+            // se o wineID nao foi fornecido
+            reviews = await reviewWorker.getAllReviews(); // busca todas as reviews
         }
-        res.status(200).json(reviews);
+        res.status(200).json(reviews); // responde com as reviews encontradas
     } catch (error) {
-        handleError(res, error);
+        handleError(res, error); // trata erros que possam ocorrer na operacao
     }
 });
 
@@ -76,18 +78,21 @@ router.post('/', async (req, res): Promise<void> => {
 
 // rota para deletar review por id
 router.delete('/:id', async (req, res): Promise<void> => {
-    const reviewID = req.params.id;
+    const reviewID = req.params.id; // pega o id da review dos parametros da requisicao
 
     try {
-        const deletedCount = await reviewWorker.deleteReview(reviewID); // tenta deletar a review
+        // tenta deletar a review pelo id
+        const deletedCount = await reviewWorker.deleteReview(reviewID);
 
         if (deletedCount > 0) {
-            res.status(200).json({ message: `Review with ID ${reviewID} deleted successfully` }); // se encontrou
+            // se encontrou e deletou a review
+            res.status(200).json({ message: `Review with ID ${reviewID} deleted successfully` }); 
         } else {
-            res.status(404).json({ message: `Review with ID ${reviewID} not found` }); // se nao encontrou
+            // se nao encontrou a review
+            res.status(404).json({ message: `Review with ID ${reviewID} not found` }); 
         }
     } catch (error) {
-        handleError(res, error);
+        handleError(res, error); // trata erros que possam ocorrer durante a operacao
     }
 });
 

@@ -79,18 +79,21 @@ router.post('/', async (req, res) => {
 
 // rota para deletar um usuario por id
 router.delete('/:id', async (req, res) => {
-    const userID = req.params.id;
+    const userID = req.params.id; // pega o id do usuario dos parametros da requisicao
 
     try {
+        // tenta deletar o usuario pelo id
         const deletedCount = await userWorker.deleteUser(userID);
 
         if (deletedCount > 0) {
+            // se encontrou e deletou o usuario
             res.status(200).json({ message: `User com ID ${userID} apagado com sucesso` });
         } else {
+            // se nao encontrou o usuario
             res.status(404).json({ message: `User com ID ${userID} não encontrado` });
         }
     } catch (error) {
-        handleError(res, error);
+        handleError(res, error); // trata erros que possam ocorrer durante a operacao
     }
 });
 
@@ -130,34 +133,40 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 // atualiza username ou email
+// rota para atualizar um usuario pelo id
 router.put('/:id', async (req, res) => {
-    const userId = req.params.id;
-    const { username, email } = req.body;
+    const userId = req.params.id; // pega o id do usuario dos parametros da requisicao
+    const { username, email } = req.body; // pega os campos username e email do corpo da requisicao
 
+    // verifica se pelo menos um dos campos (username ou email) foi fornecido
     if (!username && !email) {
-        res.status(400).json({ error: 'O campo username ou email é obrigatório.' });
+        res.status(400).json({ error: 'O campo username ou email é obrigatório.' }); // retorna erro se nenhum campo foi enviado
         return;
     }
 
     try {
+        // tenta atualizar o usuario com validacao
         const updatedUser = await userWorker.updateUserWithValidation(userId, { username, email });
 
         if (updatedUser) {
-            res.status(200).json(updatedUser); 
+            // se o usuario foi encontrado e atualizado
+            res.status(200).json(updatedUser); // retorna o usuario atualizado
         } else {
-            res.status(404).json({ error: 'Utilizador não encontrado.' }); 
+            // se o usuario nao foi encontrado
+            res.status(404).json({ error: 'Utilizador não encontrado.' }); // retorna erro de usuario nao encontrado
         }
     } catch (error) {
-        console.error('Erro ao atualizar utilizador:', error);
+        console.error('Erro ao atualizar utilizador:', error); // loga o erro no console
 
-        
+        // verifica se o erro e do tipo esperado
         if (error instanceof Error) {
-            res.status(400).json({ error: error.message }); 
+            res.status(400).json({ error: error.message }); // retorna a mensagem de erro especifica
         } else {
-            res.status(500).json({ error: 'Erro interno ao atualizar utilizador.' }); 
+            res.status(500).json({ error: 'Erro interno ao atualizar utilizador.' }); // retorna erro generico de servidor
         }
     }
 });
+
 
 
 

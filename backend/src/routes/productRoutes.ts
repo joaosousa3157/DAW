@@ -36,13 +36,13 @@ router.get('/:id', async (req, res) => {
     try {
         const wine = await productsWorker.getProductById(id);
         if (wine) {
-            res.status(200).json(wine);
+            res.status(200).json(wine);// vinho encontrado, envia como resposta
         } else {
-            res.status(404).json({ error: "Vinho não encontrado." });
+            res.status(404).json({ error: "Vinho não encontrado." });// vinho nao existe, retorna erro 404
         }
     } catch (error) {
         console.error("Erro ao buscar o vinho:", error); // Log de erro
-        res.status(500).json({ error: "Erro ao buscar o vinho." });
+        res.status(500).json({ error: "Erro ao buscar o vinho." });// erro interno do servidor
     }
 });
 
@@ -67,18 +67,20 @@ router.post('/', async (req, res) => {
 
 // rota para deletar vinho pelo id
 router.delete('/:id', async (req, res) => {
-    const wineId = Number(req.params.id);
+    const wineId = Number(req.params.id); // converte o id do vinho recebido como parametro para numero
 
     try {
-        const deletedCount = await productsWorker.deleteProduct(wineId);
+        const deletedCount = await productsWorker.deleteProduct(wineId);// tenta deletar o produto usando o id fornecido
 
         if (deletedCount > 0) {
+            // se conseguiu deletar pelo menos um registro
             res.status(200).json({ message: `Wine with ID ${wineId} deleted successfully` });
         } else {
+            // se nao encontrou nenhum registro com o id fornecido
             res.status(404).json({ message: `Wine with ID ${wineId} not found` });
         }
     } catch (error) {
-        handleError(res, error);
+        handleError(res, error);// trata qualquer erro que ocorra durante a operacao
     }
 });
 
