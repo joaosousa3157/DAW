@@ -125,29 +125,37 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 router.put('/:id', async (req, res) => {
     const userId = req.params.id;
-    const { username } = req.body;
+    const { username, email } = req.body;
 
-    if (!username) {
-        res.status(400).json({ error: 'O campo username é obrigatório.' });
+    // Verifica se ao menos um dos campos (username ou email) foi fornecido
+    if (!username && !email) {
+        res.status(400).json({ error: 'O campo username ou email é obrigatório.' });
         return;
     }
 
     try {
-        const updatedCount = await userWorker.updateUser(userId, { username });
-        console.log("Número de registros atualizados:", updatedCount); // Log para debug
+        // Chama a função de validação e atualização
+        const updatedUser = await userWorker.updateUserWithValidation(userId, { username, email });
 
-        if (updatedCount > 0) {
-            const updatedUser = await userWorker.getUserById(userId); // Busca o usuário atualizado
-            console.log("Usuário atualizado no banco de dados:", updatedUser); // Log para debug
+        if (updatedUser) {
             res.status(200).json(updatedUser); // Retorna o usuário atualizado
         } else {
-            res.status(404).json({ error: 'Usuário não encontrado.' });
+            res.status(404).json({ error: 'Usuário não encontrado.' }); // Caso o usuário não seja encontrado
         }
     } catch (error) {
         console.error('Erro ao atualizar usuário:', error);
-        res.status(500).json({ error: 'Erro interno ao atualizar usuário.' });
+
+        // Verifica se o erro é um caso esperado (email já em uso, por exemplo)
+        if (error instanceof Error) {
+            res.status(400).json({ error: error.message }); // Envia a mensagem de erro específica
+        } else {
+            res.status(500).json({ error: 'Erro interno ao atualizar usuário.' }); // Erro genérico do servidor
+        }
     }
 });
+
+
+
 
   
 
