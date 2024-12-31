@@ -96,7 +96,7 @@ const WineDetailPage: React.FC = () => {
     }
 
     const reviewData = {
-      userID: user.id, // id do usuario logado
+      userID: user.id, // id do utilizador logado
       wineID: id, // id do vinho
       rating: newReview.rating, // nota
       comment: newReview.comment.trim(), // comentario

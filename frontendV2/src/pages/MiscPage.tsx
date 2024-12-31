@@ -24,32 +24,6 @@ const MiscPage: React.FC = () => {
     fetchDeals(); // chama a função de busca ao montar o componente
   }, []); // dependência vazia faz com que essa lógica rode apenas uma vez na montagem
 
-//   return (
-//     <div className="accessories-page">
-//       <header className="accessories-header">
-//         <h1>Acessórios para Vinhos</h1>
-//         <p>
-//           Explore nossa seleção de acessórios que tornam sua experiência com
-//           vinho ainda melhor.
-//         </p>
-//       </header>
-
-//       <section className="accessories-list">
-//         <div className="accessories-grid">
-//           {accessories.map((accessory, index) => (
-//             <WineCard
-//               key={index}
-//               id={accessory.id}
-//               image={accessory.image}
-//               name={accessory.name}
-//               price={accessory.price}
-//               rating={accessory.rating}
-//             />
-//           ))}
-//         </div>
-//       </section>
-//     </div>
-//   );
 return (
     <div className="accesories-page">
       <header className="accesories-header">
@@ -74,6 +48,5 @@ return (
   );
 
 };
-
 
 export default MiscPage;
