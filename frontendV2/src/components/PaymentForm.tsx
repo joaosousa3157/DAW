@@ -8,7 +8,7 @@ interface PaymentFormProps {
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
-  const { checkoutItems } = useCheckout(); // Acessando os itens do carrinho do contexto
+  const { checkoutItems, clearCheckout } = useCheckout(); // Inclui a função clearCheckout
   const { user } = useUser(); // Acessando o usuário logado do contexto
   const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
   const [formData, setFormData] = useState({
@@ -26,7 +26,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     discountCode: "",
   });
   const [paymentStatus, setPaymentStatus] = useState<"pending" | "success" | "error">("pending");
-  const [formErrors, setFormErrors] = useState<string[]>([]); // Para armazenar os erros de validação
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   const handleToggleBillingAddress = () => {
     setUseShippingAsBilling(!useShippingAsBilling);
@@ -42,8 +42,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
 
   const validateForm = () => {
     const errors: string[] = [];
-    
-    // Verificando se os campos obrigatórios estão preenchidos
+
     if (!formData.firstName) errors.push("Nome próprio é obrigatório.");
     if (!formData.lastName) errors.push("Sobrenome é obrigatório.");
     if (!formData.nif) errors.push("NIF é obrigatório.");
@@ -55,7 +54,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     if (!formData.cvv) errors.push("CVV é obrigatório.");
     if (!formData.paymentMethod) errors.push("Método de pagamento é obrigatório.");
 
-    // Se o endereço de cobrança não for o mesmo de entrega, deve ser preenchido
     if (!useShippingAsBilling && !formData.billingAddress) {
       errors.push("Endereço de cobrança é obrigatório.");
     }
@@ -66,39 +64,34 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validando o formulário
     const errors = validateForm();
     if (errors.length > 0) {
       setFormErrors(errors);
-      return; // Não envia o formulário se houver erros
+      return;
     }
 
-    // Limpar erros caso o formulário seja válido
     setFormErrors([]);
 
-    // Verificando se o usuário está logado
     if (!user || !user.id) {
       setPaymentStatus("error");
       console.error("Usuário não está logado!");
       return;
     }
 
-    // Prepare data to send in the POST request
     const dataToSend = {
       ...formData,
       billingAddress: useShippingAsBilling ? formData.shippingAddress : formData.billingAddress,
-      cartItems: checkoutItems, // Adiciona os itens do carrinho ao corpo da requisição
-      userID: user.id, // Inclui o ID do usuário logado
+      cartItems: checkoutItems,
+      userID: user.id,
     };
 
     try {
       const response = await axios.post("/api/orders", dataToSend);
 
-      // Se o pagamento for bem-sucedido, definir o status como 'success'
       setPaymentStatus("success");
+      clearCheckout(); // Limpa o carrinho após uma compra bem-sucedida
       console.log("Pedido enviado com sucesso", response.data);
     } catch (error) {
-      // Se houver erro, definir o status como 'error'
       setPaymentStatus("error");
       console.error("Erro ao enviar o pedido", error);
     }
@@ -132,7 +125,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     <div className="payment-form">
       <h2>Formulário de Pagamento</h2>
       <form onSubmit={handleSubmit}>
-        {/* Exibindo os erros de validação */}
         {formErrors.length > 0 && (
           <div className="form-errors">
             <ul>
@@ -143,7 +135,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           </div>
         )}
 
-        {/* Personal Details */}
         <div className="form-group">
           <label htmlFor="first-name">Nome Próprio</label>
           <input
@@ -181,7 +172,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           />
         </div>
 
-        {/* Shipping Address */}
         <div className="form-group">
           <label htmlFor="shipping-address">Endereço de Entrega</label>
           <textarea
@@ -206,7 +196,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           />
         </div>
 
-        {/* Billing Address */}
         <div className="form-group">
           <input
             type="checkbox"
@@ -232,7 +221,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           </div>
         )}
 
-        {/* Payment Details */}
         <div className="form-group">
           <label htmlFor="card-name">Nome no Cartão</label>
           <input
@@ -283,7 +271,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           />
         </div>
 
-        {/* Payment Method Selection */}
         <div className="form-group">
           <label>Pagamento</label>
           <div>
@@ -334,7 +321,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           </div>
         </div>
 
-        {/* Discount Code */}
         <div className="form-group">
           <label htmlFor="discount-code">Código de Desconto ou Cartão de Oferta</label>
           <input
@@ -347,13 +333,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           />
         </div>
 
-        {/* Submit Button */}
         <button type="submit" className="submit-button">
           Finalizar Pagamento
         </button>
       </form>
 
-      {/* Back to Cart Button */}
       <button className="back-to-cart-button" onClick={onBackToCart}>
         Voltar ao Carrinho
       </button>

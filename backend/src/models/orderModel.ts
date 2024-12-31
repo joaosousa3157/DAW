@@ -1,102 +1,103 @@
 import { orderDB } from '../dbInstances';
 
-// Interface para itens no carrinho
+// interface pra itens no carrinho
 export interface CartItem {
-    id: string; // ID do vinho
-    name: string; // Nome do vinho
-    price: number; // Preço
-    quantity: number; // Quantidade
-    img?: string; // Imagem (opcional)
+    id: string; // id do vinho
+    name: string; // nome do vinho
+    price: number; // preco
+    quantity: number; // quantidade
+    img?: string; // imagem (opcional)
 }
 
-// Interface para pedidos
+// interface pra pedidos
 export interface Order {
-    userID: string; // ID do usuário
-    firstName: string; // Nome próprio
-    lastName: string; // Sobrenome
-    nif: string; // NIF
-    shippingAddress: string; // Endereço de entrega
-    shippingPhone: string; // Telefone de entrega
-    billingAddress: string; // Endereço de cobrança
-    cardName: string; // Nome no cartão
-    cardNumber: string; // Número do cartão
-    expiryDate: string; // Data de validade do cartão
-    cvv: string; // CVV do cartão
-    paymentMethod: string; // Método de pagamento
-    discountCode?: string; // Código de desconto (opcional)
-    cartItems: CartItem[]; // Itens no carrinho
-    dateOfPurchase: Date; // Data da compra
-    userEmail: string; // E-mail do usuário
-    _id?: string; // ID do pedido (opcional, gerado pelo banco)
+    userID: string; // id do usuario
+    firstName: string; // nome proprio
+    lastName: string; // sobrenome
+    nif: string; // nif
+    shippingAddress: string; // endereco de entrega
+    shippingPhone: string; // telefone de entrega
+    billingAddress: string; // endereco de cobranca
+    cardName: string; // nome no cartao
+    cardNumber: string; // numero do cartao
+    expiryDate: string; // validade do cartao
+    cvv: string; // cvv do cartao
+    paymentMethod: string; // metodo de pagamento
+    discountCode?: string; // codigo de desconto (opcional)
+    cartItems: CartItem[]; // itens no carrinho
+    dateOfPurchase: Date; // data da compra
+    userEmail: string; // email do usuario
+    _id?: string; // id do pedido (opcional, gerado pelo banco)
 }
 
+// classe pra mexer no banco de pedidos
 export default class orderdbWorker {
-    private db = orderDB; // Referência ao banco de dados de pedidos
+    private db = orderDB; // referencia ao banco de dados de pedidos
 
+    // insere uma nova ordem
     public insertOrder(order: Order): Promise<Order> {
-        // Insere uma nova ordem no banco de dados
         return new Promise((resolve, reject) => {
             this.db.insert(order, (err: Error | null, newOrder: Order) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // erro ao inserir
                 } else {
-                    resolve(newOrder);
+                    resolve(newOrder); // deu certo
                 }
             });
         });
     }
 
+    // pega todas as ordens
     public getAllOrders(): Promise<Order[]> {
-        // Retorna todas as ordens
         return new Promise((resolve, reject) => {
             this.db.find({}, (err: Error | null, orders: Order[]) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // erro ao buscar
                 } else {
-                    resolve(orders);
+                    resolve(orders); // deu certo
                 }
             });
         });
     }
 
+    // pega uma ordem pelo id
     public getOrderById(id: string): Promise<Order | null> {
-        // Retorna uma ordem pelo ID
         return new Promise((resolve, reject) => {
             this.db.findOne({ _id: id }, (err: Error | null, order: Order | null) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // erro ao buscar pelo id
                 } else {
-                    resolve(order);
+                    resolve(order); // achou a ordem
                 }
             });
         });
     }
 
+    // apaga uma ordem pelo id
     public deleteOrder(id: string): Promise<number> {
-        // Deleta uma ordem pelo ID
         return new Promise((resolve, reject) => {
             this.db.remove({ _id: id }, {}, (err: Error | null, numRemoved: number) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // erro ao apagar
                 } else {
-                    resolve(numRemoved);
+                    resolve(numRemoved); // numero de ordens apagadas
                 }
             });
         });
     }
 
+    // filtra ordens com base no criterio dado
     public filterOrders(filter: Partial<Order>): Promise<Order[]> {
-        // Retorna ordens que correspondem ao filtro
         return new Promise((resolve, reject) => {
             if (filter.dateOfPurchase !== undefined) {
-                filter.dateOfPurchase = new Date(filter.dateOfPurchase as any); // Formata data
+                filter.dateOfPurchase = new Date(filter.dateOfPurchase as any); // ajeita a data
             }
 
             this.db.find(filter, (err: Error | null, orders: Order[]) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // erro ao filtrar
                 } else {
-                    resolve(orders);
+                    resolve(orders); // ordens filtradas
                 }
             });
         });

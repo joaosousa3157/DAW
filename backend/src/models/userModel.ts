@@ -46,8 +46,8 @@ export default class userdbWorker {
     public updateUser(id: string, updatedUser: Partial<User>): Promise<number> {
         return new Promise((resolve, reject) => {
             this.db.update(
-                { _id: id }, // Filtrar pelo ID
-                { $set: updatedUser }, // Atualizar os campos fornecidos
+                { _id: id }, // filtrar pelo ID
+                { $set: updatedUser }, // atualizar os campos fornecidos
                 {},
                 (err: Error | null, numUpdated: number) => {
                     err ? reject(err) : resolve(numUpdated);
@@ -77,21 +77,24 @@ export default class userdbWorker {
             });
         });
     }
+
+    // valida e atualiza usuario
     public async updateUserWithValidation(id: string, updatedUser: Partial<User>): Promise<User | null> {
-        // Certifica-se de que o email não está em uso por outro usuário
+        // verifica se o email ja esta em uso por outro usuario
         if (updatedUser.email) {
-          const existingUser = await this.getUserByEmail(updatedUser.email);
-          if (existingUser && existingUser._id !== id) {
-            throw new Error("O email já está em uso por outro usuário.");
-          }
+            const existingUser = await this.getUserByEmail(updatedUser.email);
+            if (existingUser && existingUser._id !== id) {
+                throw new Error("o email ja esta em uso por outro usuario."); // email duplicado
+            }
         }
-      
-        // Atualiza o usuário
+
+        // atualiza o usuario com os novos dados
         await this.updateUser(id, updatedUser);
-      
-        // Retorna o usuário atualizado
+
+        // retorna o usuario atualizado
         return this.getUserById(id);
-      }
+    }
+
 
     
     

@@ -123,33 +123,33 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'An internal error occurred.' });
     }
 });
+
+// atualiza username ou email
 router.put('/:id', async (req, res) => {
     const userId = req.params.id;
     const { username, email } = req.body;
 
-    // Verifica se ao menos um dos campos (username ou email) foi fornecido
     if (!username && !email) {
         res.status(400).json({ error: 'O campo username ou email é obrigatório.' });
         return;
     }
 
     try {
-        // Chama a função de validação e atualização
         const updatedUser = await userWorker.updateUserWithValidation(userId, { username, email });
 
         if (updatedUser) {
-            res.status(200).json(updatedUser); // Retorna o usuário atualizado
+            res.status(200).json(updatedUser); 
         } else {
-            res.status(404).json({ error: 'Usuário não encontrado.' }); // Caso o usuário não seja encontrado
+            res.status(404).json({ error: 'Usuário não encontrado.' }); 
         }
     } catch (error) {
         console.error('Erro ao atualizar usuário:', error);
 
-        // Verifica se o erro é um caso esperado (email já em uso, por exemplo)
+        
         if (error instanceof Error) {
-            res.status(400).json({ error: error.message }); // Envia a mensagem de erro específica
+            res.status(400).json({ error: error.message }); 
         } else {
-            res.status(500).json({ error: 'Erro interno ao atualizar usuário.' }); // Erro genérico do servidor
+            res.status(500).json({ error: 'Erro interno ao atualizar usuário.' }); 
         }
     }
 });

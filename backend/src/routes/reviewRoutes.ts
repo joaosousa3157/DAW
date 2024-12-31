@@ -50,7 +50,7 @@ router.post('/', async (req, res): Promise<void> => {
         const orders = await orderWorker.filterOrders({ userID });
         console.log("Pedidos encontrados para o usuário:", orders);
 
-        // Itera sobre os pedidos e verifica se o vinho está nos `cartItems`
+        // itera sobre os pedidos e verifica se o vinho esta nos `cartItems`
         const purchasedWine = orders.some(order =>
             order.cartItems.some((item: any) => item.id === wineID)
         );

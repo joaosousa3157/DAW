@@ -56,6 +56,7 @@ export default class ReviewdbWorker {
         });
     }
 
+    // pega as reviews pelo id do vinho
     public getReviewsByWineID(wineID: string): Promise<Review[]> {
         return new Promise((resolve, reject) => {
             this.db.find({ wineID }, (err: Error | null, reviews: Review[]) => {
