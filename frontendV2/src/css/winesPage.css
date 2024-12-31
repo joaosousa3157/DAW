@@ -9,6 +9,7 @@
   flex: 3;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(16rem,32rem));
   gap: 1.5rem 1rem;
   padding: 2rem;
   justify-items: center;
