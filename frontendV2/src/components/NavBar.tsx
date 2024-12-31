@@ -8,10 +8,10 @@ import CartIcon from "../images/cart.svg";
 import "../css/navBar.css";
 
 const NavBar: React.FC = () => {
-  const { checkoutItems } = useCheckout();
+  const { checkoutItems } = useCheckout(); // pega os itens do carrinho do contexto
   const totalItems = checkoutItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
+    (sum, item) => sum + item.quantity, // soma todas as quantidades dos itens no carrinho
+    0 // valor inicial da soma
   );
 
   return (

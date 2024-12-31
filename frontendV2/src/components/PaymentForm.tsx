@@ -3,14 +3,15 @@ import axios from "axios";
 import { useCheckout } from "../context/CheckoutContext";
 import { useUser } from "../context/UserContext";
 
+// Define as props esperadas pelo componente
 interface PaymentFormProps {
-  onBackToCart: () => void;
+  onBackToCart: () => void; // funcao pra voltar ao carrinho
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
-  const { checkoutItems, clearCheckout } = useCheckout();
-  const { user } = useUser();
-  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
+  const { checkoutItems, clearCheckout } = useCheckout(); // pega itens do carrinho e funcao pra limpar
+  const { user } = useUser(); // pega o usuario logado
+  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true); // controla endereco de cobranca
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,65 +20,69 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     shippingPhone: "",
     billingAddress: "",
     paymentMethod: "",
-  });
+  }); // estado inicial do formulario
   const [paymentStatus, setPaymentStatus] = useState<
     "pending" | "success" | "error"
-  >("pending");
-  const [formErrors, setFormErrors] = useState<string[]>([]);
+  >("pending"); // estado pra status do pagamento
+  const [formErrors, setFormErrors] = useState<string[]>([]); // lista de erros de validacao
 
+  // alterna entre usar o endereco de envio como cobranca
   const handleToggleBillingAddress = () => {
     setUseShippingAsBilling(!useShippingAsBilling);
   };
 
+  // atualiza os campos do formulario conforme o usuario digita
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; // pega o nome e valor do campo
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value, // atualiza o valor correspondente
     }));
   };
 
+  // calcula o total do carrinho
   const calculateTotal = () =>
     checkoutItems.reduce(
-      (total, item) => total + item.quantity * item.price,
-      0
+      (total, item) => total + item.quantity * item.price, // soma preco x quantidade de cada item
+      0 // valor inicial
     );
 
-  const total = calculateTotal();
-  const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+  const total = calculateTotal(); // total final
+  const now = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' }); // data e hora atuais no formato PT
 
+  // valida os campos do formulario
   const validateForm = () => {
     const errors: string[] = [];
 
     if (!formData.firstName) errors.push("Nome próprio é obrigatório.");
     if (!formData.lastName) errors.push("Sobrenome é obrigatório.");
     if (!formData.nif) errors.push("NIF é obrigatório.");
-    if (!formData.shippingAddress)
-      errors.push("Endereço de entrega é obrigatório.");
-    if (!formData.paymentMethod)
-      errors.push("Método de pagamento é obrigatório.");
+    if (!formData.shippingAddress) errors.push("Endereço de entrega é obrigatório.");
+    if (!formData.paymentMethod) errors.push("Método de pagamento é obrigatório.");
 
+    // valida endereco de cobranca caso nao seja o mesmo do envio
     if (!useShippingAsBilling && !formData.billingAddress) {
       errors.push("Endereço de cobrança é obrigatório.");
     }
 
-    return errors;
+    return errors; // retorna os erros
   };
 
+  // envia o pedido
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // previne o comportamento padrao do form
 
-    const errors = validateForm();
+    const errors = validateForm(); // valida o formulario
     if (errors.length > 0) {
-      setFormErrors(errors);
+      setFormErrors(errors); // se tem erro, atualiza o estado
       return;
     }
 
-    setFormErrors([]);
+    setFormErrors([]); // limpa erros caso o form seja valido
 
-    if (!user || !user.id) {
+    if (!user || !user.id) { // verifica se o usuario esta logado
       setPaymentStatus("error");
       console.error("Usuário não está logado!");
       return;
@@ -86,25 +91,26 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     const dataToSend = {
       ...formData,
       billingAddress: useShippingAsBilling
-        ? formData.shippingAddress
-        : formData.billingAddress,
-      cartItems: checkoutItems,
-      userID: user.id,
-      total: total,
-      dateOfPurchase: now
+        ? formData.shippingAddress // usa o endereco de envio
+        : formData.billingAddress, // usa o endereco de cobranca
+      cartItems: checkoutItems, // itens do carrinho
+      userID: user.id, // id do usuario
+      total: total, // total da compra
+      dateOfPurchase: now, // data e hora da compra
     };
 
     try {
-      const response = await axios.post("/api/orders", dataToSend);
+      const response = await axios.post("/api/orders", dataToSend); // envia a ordem pro backend
 
-      setPaymentStatus("success");
-      clearCheckout(); // Limpa o carrinho após uma compra bem-sucedida
+      setPaymentStatus("success"); // sucesso
+      clearCheckout(); // limpa o carrinho apos sucesso
       console.log("Pedido enviado com sucesso", response.data);
     } catch (error) {
-      setPaymentStatus("error");
+      setPaymentStatus("error"); // erro
       console.error("Erro ao enviar o pedido", error);
     }
   };
+
 
   if (paymentStatus === "success") {
     return (

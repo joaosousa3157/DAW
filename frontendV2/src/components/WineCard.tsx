@@ -3,34 +3,38 @@ import { Link } from "react-router-dom";
 import { useCheckout } from "../context/CheckoutContext";
 import "../css/wineCard.css";
 
+// interface para definir as propriedades aceitas pelo componente
 interface WineCardProps {
-  id: string;
-  image: string;
-  name: string;
-  price: number;
-  rating: number;
-  onClick?: () => void; // Propriedade opcional para lidar com cliques no card
+  id: string; // id do vinho
+  image: string; // url da imagem do vinho
+  name: string; // nome do vinho
+  price: number; // preco do vinho
+  rating: number; // avaliacao do vinho
+  onClick?: () => void; // funcao opcional para lidar com cliques no card
 }
 
+// componente que renderiza um card de vinho
 const WineCard: React.FC<WineCardProps> = ({
-  id,
-  image,
-  name,
-  price,
-  rating,
-  onClick, // Desestrutura a propriedade onClick
+  id, // id do vinho
+  image, // url da imagem
+  name, // nome do vinho
+  price, // preco
+  rating, // avaliacao
+  onClick, // funcao opcional de clique
 }) => {
-  const { addToCheckout } = useCheckout();
+  const { addToCheckout } = useCheckout(); // hook do contexto do carrinho
 
+  // funcao que adiciona o vinho ao carrinho
   const handleAddToCart = () => {
     addToCheckout({
-      id,
-      name,
-      price,
-      quantity: 1,
-      img: image,
+      id, // id do vinho
+      name, // nome do vinho
+      price, // preco
+      quantity: 1, // adiciona uma unidade
+      img: image, // url da imagem
     });
   };
+
 
   return (
     <div className="wine-card" onClick={onClick}>
