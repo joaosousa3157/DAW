@@ -16,7 +16,6 @@ const WinesPage: React.FC = () => {
   });
   const navigate = useNavigate();
 
-  // Fetch data from API
   useEffect(() => {
     const fetchWines = async () => {
       try {
@@ -68,10 +67,6 @@ const WinesPage: React.FC = () => {
       (filters.year.length === 0 || filters.year.includes(wine.year))
     );
   });
-
-  const handleWineClick = (id: string) => {
-    navigate(`/wines/${id}`);
-  };
 
   return (
     <div className="product-page">
@@ -158,7 +153,6 @@ const WinesPage: React.FC = () => {
               name={wine.name}
               price={wine.price}
               rating={wine.rating}
-              onClick={() => handleWineClick(wine._id)} // Garante que o ID correto é passado
             />
           ))
         ) : (

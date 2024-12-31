@@ -33,7 +33,9 @@ const WineCard: React.FC<WineCardProps> = ({
   };
 
   return (
-    <div className="wine-card" onClick={onClick}> {/* Adiciona suporte para onClick */}
+    <div className="wine-card" onClick={onClick}>
+      {" "}
+      {/* Adiciona suporte para onClick */}
       <div className="wine-image-container">
         <Link to={"/wines/" + id}>
           <img src={image} alt={name} className="wine-image" />
@@ -43,13 +45,15 @@ const WineCard: React.FC<WineCardProps> = ({
         <Link to={"/wines/" + id}>
           <h3 className="wine-name">{name}</h3>
         </Link>
-        <p className="wine-price">{price.toString() + " €"}</p>
-        <div className="wine-rating">
-          {"★".repeat(Math.floor(rating)) + (rating % 1 !== 0 ? "½" : "")}
+        <div className="separator">
+          <p className="wine-price">{price.toString() + " €"}</p>
+          <div className="wine-rating">
+            {"★".repeat(Math.floor(rating)) + (rating % 1 !== 0 ? "½" : "")}
+          </div>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>
+            Adicionar ao carrinho
+          </button>
         </div>
-        <button className="add-to-cart-button" onClick={handleAddToCart}>
-          Adicionar ao carrinho
-        </button>
       </div>
     </div>
   );
