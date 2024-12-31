@@ -1,6 +1,8 @@
 .deals-page {
     color: #333;
     min-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
   }
   
   .deals-header {
@@ -23,6 +25,7 @@
   .deals-list {
     padding: 40px 20px;
     background-color: #f8f8f8;
+    flex: 1;
   }
   
   .deals-grid {

@@ -9,7 +9,10 @@ const Cart: React.FC<CartProps> = ({ onProceedToPayment }) => {
   const { checkoutItems, updateQuantity, removeFromCheckout } = useCheckout();
 
   const calculateTotal = () =>
-    checkoutItems.reduce((total, item) => total + item.quantity * item.price, 0);
+    checkoutItems.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
 
   return (
     <div>
@@ -17,36 +20,37 @@ const Cart: React.FC<CartProps> = ({ onProceedToPayment }) => {
         {checkoutItems.length > 0 ? (
           checkoutItems.map((item) => (
             <div className="cart-item" key={item.id}>
-              <img
-                src={item.img}
-                alt={item.name}
-                className="cart-item-image"
-              />
+              <img src={item.img} alt={item.name} className="cart-item-image" />
               <div className="cart-item-details">
-                <h3>{item.name}</h3>
-                <p>Preço: €{item.price.toFixed(2)}</p>
-                <p>Subtotal: €{(item.price * item.quantity).toFixed(2)}</p>
-                <div className="quantity-control">
+                <div className="details">
+                  <h3>{item.name}</h3>
+                  <p>Preço: €{item.price.toFixed(2)}</p>
+                  {/* <p>Subtotal: €{(item.price * item.quantity).toFixed(2)}</p> */}
+                </div>
+
+                <div className="update-and-remove">
+                  <div className="quantity-control">
+                    <button
+                      className="quantity-button"
+                      onClick={() => updateQuantity(item.id, -1)}
+                    >
+                      -
+                    </button>
+                    <span className="quantity-input">{item.quantity}</span>
+                    <button
+                      className="quantity-button"
+                      onClick={() => updateQuantity(item.id, 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
-                    className="quantity-button"
-                    onClick={() => updateQuantity(item.id, -1)}
+                    className="remove-item-button"
+                    onClick={() => removeFromCheckout(item.id)}
                   >
-                    -
-                  </button>
-                  <span className="quantity-input">{item.quantity}</span>
-                  <button
-                    className="quantity-button"
-                    onClick={() => updateQuantity(item.id, 1)}
-                  >
-                    +
+                    Remover
                   </button>
                 </div>
-                <button
-                  className="remove-item-button"
-                  onClick={() => removeFromCheckout(item.id)}
-                >
-                  Remover
-                </button>
               </div>
             </div>
           ))

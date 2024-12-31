@@ -9,7 +9,7 @@ const DealsPage: React.FC = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await axios.get("/api/products?category=packs");
+        const response = await axios.get("/api/products?category=pack");
         setDeals(response.data);
       } catch (error) {
         console.error("Erro ao buscar os packs:", error);
@@ -22,7 +22,7 @@ const DealsPage: React.FC = () => {
   return (
     <div className="deals-page">
       <header className="deals-header">
-        <h1>Promoções</h1>
+        <h1>Packs</h1>
         <p>Descubra os melhores vinhos em promoção para aproveitar!</p>
       </header>
       <section className="deals-list">

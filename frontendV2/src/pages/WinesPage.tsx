@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import WineCard from "../components/WineCard";
 import "../css/winesPage.css";
 
@@ -14,7 +13,6 @@ const WinesPage: React.FC = () => {
     year: [] as number[],
     rating: [] as number[],
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWines = async () => {
@@ -35,7 +33,7 @@ const WinesPage: React.FC = () => {
   const typeFilters = ["Tinto", "Branco", "Verde"];
   const priceFilters = ["Abaixo de 5€", "5€ - 10€", "10€ - 15€", "15€ - 20€", "20€ - 25€", "Acima de 25€"];
   const ratingFilters = [3, 4, 4.5];
-  const yearFilters = Array.from({ length: 20 }, (_, i) => 2005 + i);
+  const yearFilters = Array.from({ length: 11 }, (_, i) => 2013 + i);
 
   const handleCheckboxChange = (
     filterName: keyof typeof filters,

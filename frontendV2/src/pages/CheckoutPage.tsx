@@ -8,7 +8,6 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="checkout-page">
-      <h1>Checkout</h1>
       {!showPaymentForm ? (
         <Cart onProceedToPayment={() => setShowPaymentForm(true)} />
       ) : (

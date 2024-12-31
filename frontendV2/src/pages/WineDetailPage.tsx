@@ -139,7 +139,6 @@ const WineDetailPage: React.FC = () => {
       quantity: 1,
       img: wine.image,
     });
-    alert(`${wine.name} foi adicionado ao carrinho.`);
   };
 
   return (

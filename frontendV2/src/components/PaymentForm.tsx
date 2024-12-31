@@ -18,21 +18,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     shippingAddress: "",
     shippingPhone: "",
     billingAddress: "",
-    cardName: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
     paymentMethod: "",
-    discountCode: "",
   });
-  const [paymentStatus, setPaymentStatus] = useState<"pending" | "success" | "error">("pending");
+  const [paymentStatus, setPaymentStatus] = useState<
+    "pending" | "success" | "error"
+  >("pending");
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
   const handleToggleBillingAddress = () => {
     setUseShippingAsBilling(!useShippingAsBilling);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -46,13 +45,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     if (!formData.firstName) errors.push("Nome próprio é obrigatório.");
     if (!formData.lastName) errors.push("Sobrenome é obrigatório.");
     if (!formData.nif) errors.push("NIF é obrigatório.");
-    if (!formData.shippingAddress) errors.push("Endereço de entrega é obrigatório.");
-    if (!formData.shippingPhone) errors.push("Telefone de entrega é obrigatório.");
-    if (!formData.cardName) errors.push("Nome no cartão é obrigatório.");
-    if (!formData.cardNumber) errors.push("Número do cartão é obrigatório.");
-    if (!formData.expiryDate) errors.push("Data de expiração é obrigatória.");
-    if (!formData.cvv) errors.push("CVV é obrigatório.");
-    if (!formData.paymentMethod) errors.push("Método de pagamento é obrigatório.");
+    if (!formData.shippingAddress)
+      errors.push("Endereço de entrega é obrigatório.");
+    if (!formData.paymentMethod)
+      errors.push("Método de pagamento é obrigatório.");
 
     if (!useShippingAsBilling && !formData.billingAddress) {
       errors.push("Endereço de cobrança é obrigatório.");
@@ -80,7 +76,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
 
     const dataToSend = {
       ...formData,
-      billingAddress: useShippingAsBilling ? formData.shippingAddress : formData.billingAddress,
+      billingAddress: useShippingAsBilling
+        ? formData.shippingAddress
+        : formData.billingAddress,
       cartItems: checkoutItems,
       userID: user.id,
     };
@@ -101,7 +99,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     return (
       <div className="payment-success">
         <h2>Pagamento Bem Sucedido!</h2>
-        <p>A sua encomenda foi realizada com sucesso. Obrigado pela sua compra!</p>
+        <p>
+          A sua encomenda foi realizada com sucesso. Obrigado pela sua compra!
+        </p>
         <button onClick={onBackToCart} className="back-to-cart-button">
           Voltar ao Carrinho
         </button>
@@ -113,7 +113,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
     return (
       <div className="payment-error">
         <h2>Erro no Pagamento</h2>
-        <p>Ocorreu um erro ao processar o seu pagamento. Por favor, tente novamente.</p>
+        <p>
+          Ocorreu um erro ao processar o seu pagamento. Por favor, tente
+          novamente.
+        </p>
         <button onClick={onBackToCart} className="back-to-cart-button">
           Voltar ao Carrinho
         </button>
@@ -129,7 +132,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
           <div className="form-errors">
             <ul>
               {formErrors.map((error, index) => (
-                <li key={index} className="error-message">{error}</li>
+                <li key={index} className="error-message">
+                  {error}
+                </li>
               ))}
             </ul>
           </div>
@@ -197,6 +202,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
         </div>
 
         <div className="form-group">
+          <label htmlFor="use-shipping-as-billing">
+            Utilizar o endereço de envio como endereço de faturação
+          </label>
           <input
             type="checkbox"
             id="use-shipping-as-billing"
@@ -204,12 +212,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
             checked={useShippingAsBilling}
             onChange={handleToggleBillingAddress}
           />
-          <label htmlFor="use-shipping-as-billing">Utilizar o endereço de envio como endereço de faturação</label>
         </div>
 
         {!useShippingAsBilling && (
           <div className="form-group">
-            <label htmlFor="billing-address">Endereço de Cobrança</label>
+            <label htmlFor="billing-address">Endereço de Faturação</label>
             <textarea
               id="billing-address"
               name="billingAddress"
@@ -220,57 +227,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
             ></textarea>
           </div>
         )}
-
-        <div className="form-group">
-          <label htmlFor="card-name">Nome no Cartão</label>
-          <input
-            type="text"
-            id="card-name"
-            name="cardName"
-            value={formData.cardName}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="card-number">Número do Cartão</label>
-          <input
-            type="text"
-            id="card-number"
-            name="cardNumber"
-            value={formData.cardNumber}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="expiry-date">Data de Expiração</label>
-          <input
-            type="text"
-            id="expiry-date"
-            name="expiryDate"
-            value={formData.expiryDate}
-            onChange={handleInputChange}
-            placeholder="MM/AA"
-            required
-            className="form-input"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="cvv">CVV</label>
-          <input
-            type="text"
-            id="cvv"
-            name="cvv"
-            value={formData.cvv}
-            onChange={handleInputChange}
-            required
-            className="form-input"
-          />
-        </div>
-
         <div className="form-group">
           <label>Pagamento</label>
           <div>
@@ -320,19 +276,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ onBackToCart }) => {
             </label>
           </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="discount-code">Código de Desconto ou Cartão de Oferta</label>
-          <input
-            type="text"
-            id="discount-code"
-            name="discountCode"
-            value={formData.discountCode}
-            onChange={handleInputChange}
-            className="form-input"
-          />
-        </div>
-
         <button type="submit" className="submit-button">
           Finalizar Pagamento
         </button>

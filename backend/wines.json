@@ -418,6 +418,34 @@
         "image": "https://rocim.pt/wp-content/uploads/2024/04/AMPHORAVB_Prancheta-1.jpg",
         "rating": 4.5,
         "category": "wine"
+    },
+    {
+        "id": 31,
+        "name": "Saca rolhas da prozis",
+        "type": "",
+        "region": "",
+        "price": 16.90,
+        "year": 0,
+        "description": "O melhor saca rolhas",
+        "vol": 0,
+        "capacity": 0,
+        "image": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcR1do4uwBTNC25qUpFMxflu1DU-Koy-ipvcPHET4qQIObicRU0BzeeiOG0OhR3cPI6H3WnUxElIUs5TAlkFp-c2BawCQfbls5BLEWQ_zcxDqjlwt1R91iJhujhd1Czh8YJLUIT2L8mV3Q&usqp=CAc",
+        "rating": 4.5,
+        "category": "acessory"
+    },
+    {
+        "id": 32,
+        "name": "Pack tintos",
+        "type": "",
+        "region": "",
+        "price": 160.90,
+        "year": 0,
+        "description": "O melhor saca rolhas",
+        "vol": 0,
+        "capacity": 0,
+        "image": "https://rocim.pt/wp-content/uploads/2024/04/AMPHORAVB_Prancheta-1.jpg",
+        "rating": 4.5,
+        "category": "pack"
     }
 
 ]

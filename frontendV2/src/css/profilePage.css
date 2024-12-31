@@ -1,10 +1,10 @@
 /* General Styles */
 .user-profile-page {
-    font-family: Arial, sans-serif;
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     color: #333;
+    min-height: calc(100vh - 3rem);
   }
   
   /* Header Section */
@@ -23,7 +23,6 @@
     color: #555;
   }
   
-  /* Profile Details Section */
   .profile-details {
     margin-bottom: 40px;
   }
@@ -65,7 +64,6 @@
     background-color: #5b3748;
   }
   
-  /* Order History Section */
   .order-history {
     margin-bottom: 40px;
   }
@@ -99,7 +97,6 @@
     text-decoration: underline;
   }
   
-  /* Account Settings Section */
   .account-settings {
     margin-bottom: 40px;
   }

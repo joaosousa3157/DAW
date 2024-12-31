@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
     const fetchData = async () => {
       try {
         // Fetch Packs
-        const packResponse = await axios.get("/api/products?category=packs");
+        const packResponse = await axios.get("/api/products?category=pack");
         setPacks(packResponse.data.slice(0, 4));
 
         // Fetch Tintos

@@ -108,15 +108,15 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="user-profile-page">
       <header className="profile-header">
-        <h1>meu perfil</h1>
-        <p>gerencie suas informações pessoais e veja o histórico de pedidos.</p>
+        <h1>O Meu perfil</h1>
+        <p>Gerir as suas informações pessoais e ver o histórico de encomendas.</p>
       </header>
 
       <section className="profile-details">
-        <h2>informações pessoais</h2>
+        <h2>Informações pessoais</h2>
         <form onSubmit={handleUpdate}>
           <div className="form-group">
-            <label htmlFor="name">nome:</label>
+            <label htmlFor="name">Nome:</label>
             <input
               type="text"
               id="name"
@@ -127,7 +127,7 @@ const ProfilePage: React.FC = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">email:</label>
+            <label htmlFor="email">Email:</label>
             <input
               type="email"
               id="email"
@@ -140,35 +140,35 @@ const ProfilePage: React.FC = () => {
           {successMessage && <p className="success-message">{successMessage}</p>}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="update-button">
-            atualizar informações
+            Atualizar informações
           </button>
         </form>
       </section>
 
       <section className="order-history">
-        <h2>histórico de pedidos</h2>
+        <h2>Histórico de pedidos</h2>
         {isLoading ? (
-          <p>carregando pedidos...</p>
+          <p>Carregando pedidos...</p>
         ) : orders.length > 0 ? (
           <ul>
             {orders.map((order) => (
               <li key={order._id}>
-                <span>pedido #{order._id}</span> - {order.dateOfPurchase}
+                <span>Pedido #{order._id}</span> - {order.dateOfPurchase}
               </li>
             ))}
           </ul>
         ) : (
-          <p>nenhum pedido encontrado.</p>
+          <p>Nenhum pedido encontrado.</p>
         )}
       </section>
 
       <section className="account-settings">
-        <h2>configurações da conta</h2>
+        <h2>Configurações da conta</h2>
         <button onClick={logout} className="logout-button">
-          sair da conta
+          Sair da conta
         </button>
         <button onClick={handleDeleteAccount} className="delete-account-button">
-          excluir conta
+          Excluir conta
         </button>
       </section>
     </div>
